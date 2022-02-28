@@ -27,7 +27,6 @@ class UndirectedGraphProvider @Inject constructor(
 
     init{
         getGraphDataFromDatabase()
-        Log.i("","")
     }
 
     private fun getGraphDataFromDatabase(){

@@ -42,11 +42,10 @@ fun BasicAlgorithmsScreen(
             RunnableWithStarterNodeAlgorithms(algorithmsName = "DFS algorithm",viewModel= viewModel) {
                 onNavigateToDFSScreen(viewModel.starterNodeForBfsAlgorithms)
             }
-
-            NonRunnableAlgorithms(question = "Is graph connected?", answer = viewModel.isGraphConnected.value)
-            NonRunnableAlgorithms(question = "Is graph complete?", answer = viewModel.isGraphComplete.value)
-            NonRunnableAlgorithms(question = "Has graph cycle?", answer = "")
-            NonRunnableAlgorithms(question = "Count number of trees in a forest : ", answer = "")
+            NonRunnableAlgorithms(question = "Has graph cycle?", answer = viewModel.hasGraphCycle.value)
+            NonRunnableAlgorithms(question = "Has Graph a Tree ?", answer = viewModel.isGraphTree.value)
+            NonRunnableAlgorithms(question = "Is Graph Connected?", answer = viewModel.isGraphConnected.value)
+            NonRunnableAlgorithms(question = "Is Graph Complete?", answer = viewModel.isGraphComplete.value)
         }
     }
 }

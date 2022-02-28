@@ -8,6 +8,7 @@ import com.example.graphalgorithms.feature_node.domain.repository.NodeRepository
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
 
 class UndirectedGraph(val nodeRepository: NodeRepository, val edgeRepository: EdgeRepository) {
+
     suspend operator fun invoke():List<Node>{
         val nodeList = mutableListOf<Node>()
 

@@ -3,14 +3,11 @@ package com.example.graphalgorithms.feature_node.presentation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.graphalgorithms.feature_node.data.repository.FakeRepositoryForTesting
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_node.domain.use_case.DeleteNodeUseCase
+import com.example.graphalgorithms.feature_node.domain.use_case.*
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.AddEdgeUseCase
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.DeleteEdgeUseCase
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.GetEdges
-import com.example.graphalgorithms.feature_node.domain.use_case.GetNodeUseCase
-import com.example.graphalgorithms.feature_node.domain.use_case.GetNodesUseCase
 import com.example.graphalgorithms.feature_node.domain.use_case.NodeUseCases.AddNodeUseCase
-import com.example.graphalgorithms.feature_node.domain.use_case.UseCases
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,7 +35,8 @@ class NodeFeatureViewModelTest{
             GetNodeUseCase(FakeRepositoryForTesting()),
             AddEdgeUseCase(FakeRepositoryForTesting()),
             DeleteEdgeUseCase(FakeRepositoryForTesting()),
-            GetEdges(FakeRepositoryForTesting())
+            GetEdges(FakeRepositoryForTesting()),
+            UndirectedGraph(FakeRepositoryForTesting(),FakeRepositoryForTesting())
         )
         viewModel = NodeFeatureViewModel(useCases)
     }
@@ -59,7 +57,7 @@ class NodeFeatureViewModelTest{
 
         var isOtherNodeExceptSecondNodeUnSelected = true
         for(node:Node in viewModel.nodeList){
-            if(node.uniqueId!= second.uniqueId && node.isNodeSelected){
+            if(node.label!= second.label && node.isNodeSelected){
                 isOtherNodeExceptSecondNodeUnSelected = false
                 break
             }

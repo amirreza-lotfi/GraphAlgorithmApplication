@@ -74,7 +74,6 @@ class DfsViewModel(val hiltViewModel: UndirectedGraphProvider):ViewModel(){
             }
             _dfsUiEvent.emit(DfsUiEvent.OnAlgorithmEnds)
         }
-
     }
 
     fun getVisitedNodeTextForScreen(visitedNodes:MutableList<Node>): StringBuffer {

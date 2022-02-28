@@ -59,6 +59,4 @@ class ShortPathViewModel:ViewModel() {
             isItemSelected = true
         )
     }
-
-
 }
