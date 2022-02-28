@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RunAlgorithmsViewModel @Inject constructor(
+class UndirectedGraphProvider @Inject constructor(
     private val useCases: UseCases
 ): ViewModel() {
     var starterNodeForAlgorithms = ""

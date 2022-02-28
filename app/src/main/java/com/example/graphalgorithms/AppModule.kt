@@ -55,7 +55,8 @@ object AppModule {
             GetNodeUseCase(nodeRepository),
             AddEdgeUseCase(edgeRepository),
             DeleteEdgeUseCase(edgeRepository),
-            GetEdges(edgeRepository)
+            GetEdges(edgeRepository),
+            UndirectedGraph(nodeRepository,edgeRepository)
         )
     }
 }

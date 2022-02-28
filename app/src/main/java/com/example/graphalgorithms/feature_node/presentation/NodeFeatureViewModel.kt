@@ -96,6 +96,7 @@ class NodeFeatureViewModel @Inject constructor(
             }
         }
     }
+
     fun onScreenGraphEvent(event:ScreenGraphEvent){
         when(event){
             is ScreenGraphEvent.OnNodeClicked -> {

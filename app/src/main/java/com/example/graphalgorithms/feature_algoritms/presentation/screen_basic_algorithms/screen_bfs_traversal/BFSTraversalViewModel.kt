@@ -2,8 +2,7 @@ package com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.graphalgorithms.feature_algoritms.presentation.RunAlgorithmsViewModel
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.BasicAlgorithmsViewModel
+import com.example.graphalgorithms.feature_algoritms.presentation.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.screen_bfs_traversal.util.BfsUiEvent
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
-class BFSTraversalViewModel(hiltViewModel: RunAlgorithmsViewModel) :ViewModel() {
+class BFSTraversalViewModel(hiltViewModel: UndirectedGraphProvider) :ViewModel() {
 
     var nodeList:List<Node> = hiltViewModel.nodeList
     var edgeList:List<Edge> = hiltViewModel.edgeList

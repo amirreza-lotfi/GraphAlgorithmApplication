@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TitleOfChooseScreen() {
+fun TitleOfScreen() {
     Column{
         Icon(Icons.Filled.ArrowBack, contentDescription = "back to Graph screen", Modifier.size(24.dp))
         Column(

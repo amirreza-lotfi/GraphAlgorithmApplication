@@ -1,50 +1,75 @@
 package com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms
 
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavBackStackEntry
-import com.example.graphalgorithms.feature_algoritms.presentation.RunAlgorithmsViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.graphalgorithms.feature_algoritms.presentation.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.components_of_basic_algorithms.util.BasicAlgorithmsEvent
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.screen_bfs_traversal.util.BfsUiEvent
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel.Companion.findNodeByLabel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import java.util.*
 
 
-class BasicAlgorithmsViewModel(val hiltViewModel: RunAlgorithmsViewModel) :ViewModel(){
+class BasicAlgorithmsViewModel(val hiltViewModel: UndirectedGraphProvider) :ViewModel(){
 
     var starterNodeForBfsAlgorithms:String = NodeFeatureViewModel.getNodeLabels()[0]
 
     var nodeList:List<Node> = hiltViewModel.nodeList
     var edgeList:List<Edge> = hiltViewModel.edgeList
 
+    private var _isGraphConnected = mutableStateOf("")
+    val isGraphConnected: State<String> = _isGraphConnected
 
+    private var _isGraphComplete = mutableStateOf("")
+    val isGraphComplete: State<String> = _isGraphComplete
 
-
-    suspend fun onEvent(event: BasicAlgorithmsEvent){
-        when(event){
-            is BasicAlgorithmsEvent.OnNavigateToBFSScreen->{
-                hiltViewModel.starterNodeForAlgorithms = starterNodeForBfsAlgorithms
-            }
-            is BasicAlgorithmsEvent.OnNavigateToDFSScreen->{
-                hiltViewModel.starterNodeForAlgorithms = starterNodeForBfsAlgorithms
-            }
-        }
+    init{
+        _isGraphConnected.value = isGraphConnected().toString()
+        _isGraphComplete.value = isGraphComplete().toString()
     }
 
-    fun isGraphComplete():Boolean{
-        if(nodeList.isEmpty())
-            return false
-        val nodesCount = nodeList.size
-        val edgesCount = edgeList.size
+    private fun isGraphConnected():Boolean{
+        var thereIsUnselectedNodeInGraph = false
 
-        return nodesCount*(nodesCount-1) == edgesCount
+        viewModelScope.launch {
+            val starterNode = nodeList[0]
+            val queue: Queue<Node> = ArrayDeque()
+
+            starterNode.isNodeSelected = true
+            queue.add(starterNode)
+            while(!queue.isEmpty()){
+                val currentNode = queue.poll()
+
+                for(edge:Edge in currentNode?.edges!!){
+                    if(!edge.nodeTo.isNodeSelected){
+                        queue.add(edge.nodeTo)
+                        edge.nodeTo.isNodeSelected = true
+                    }
+                }
+            }
+            for(node:Node in nodeList) {
+                if(!node.isNodeSelected)
+                    thereIsUnselectedNodeInGraph = true
+            }
+            setAllNodesUnselected()
+        }
+        return !thereIsUnselectedNodeInGraph
+    }
+
+    private fun isGraphComplete():Boolean{
+        val countOfNodes = nodeList.size
+        val countOfEdges = edgeList.size
+        return (countOfNodes*(countOfNodes-1))/2 == countOfEdges
+    }
+
+    private fun setAllNodesUnselected(){
+        for(node:Node in nodeList) {
+            node.isNodeSelected = false
+        }
     }
 
 

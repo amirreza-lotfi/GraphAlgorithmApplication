@@ -2,15 +2,13 @@ package com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_
 
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_algoritms.presentation.RunAlgorithmsViewModel
+import com.example.graphalgorithms.feature_algoritms.presentation.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.screen_dfs_traversal.util.DfsUiEvent
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,14 +17,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
-class DfsViewModel(val hiltViewModel: RunAlgorithmsViewModel):ViewModel(){
+class DfsViewModel(val hiltViewModel: UndirectedGraphProvider):ViewModel(){
     val nodeList:List<Node> = hiltViewModel.nodeList
     val edgeList:List<Edge> = hiltViewModel.edgeList
 
     private val _dfsUiEvent = MutableSharedFlow<DfsUiEvent>()
     val dfsUiEvent:SharedFlow<DfsUiEvent> = _dfsUiEvent.asSharedFlow()
 
-    var starterNodeForDfsAlgorithms:String = hiltViewModel.starterNodeForAlgorithms
+    var starterNodeForDfsAlgorithms:String = "a"
 
     private var getNotesJob: Job? = null
 

@@ -20,13 +20,16 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun DFSTraversalScreen(
-    navController:NavController,
+    navController: NavController,
+    startingNode:String,
     dfsViewModel: DfsViewModel = DfsViewModel(
         hiltViewModel(
             navController.getBackStackEntry("BasicAlgorithmsScreen")
         )
     )
 ) {
+    dfsViewModel.starterNodeForDfsAlgorithms = startingNode
+
     val coroutineScope = rememberCoroutineScope()
     val visitedNodes = remember{ mutableStateListOf<Node>()}
     val visitedEdges = remember{ mutableStateListOf<Edge>()}

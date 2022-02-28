@@ -19,7 +19,7 @@ import com.example.graphalgorithms.feature_node.presentation.ui.theme.orange
 
 
 @Composable
-fun ItemOnChooseScreen(
+fun ItemOnScreen(
     option:OptionItem,
     onItemClicked:()->Unit
 ){
@@ -57,11 +57,13 @@ fun ItemOnChooseScreen(
             )
             Spacer(Modifier.height(4.dp))
 
-            Text(
-                option.content,
-                style = MaterialTheme.typography.body1,
-                color = Color.Gray
-            )
+            if(option.content!= "") {
+                Text(
+                    option.content,
+                    style = MaterialTheme.typography.body1,
+                    color = Color.Gray
+                )
+            }
         }
 
     }

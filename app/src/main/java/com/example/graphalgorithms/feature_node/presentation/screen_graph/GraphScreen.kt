@@ -29,9 +29,10 @@ import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.S
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 
 @Composable
-fun DrawingGraphScreen(
-    navController: NavController,
-    viewModel: NodeFeatureViewModel = hiltViewModel(),
+fun GraphScreen(
+    viewModel: NodeFeatureViewModel,
+    onNavigateToAddEditScreen:()->Unit,
+    onNavigateToChooseAlgorithmScreen:()->Unit,
 ){
     val isNodeSelected = viewModel.isAnyNodeSelected
     val runAlgorithmButtonVisibility by rememberSaveable{
@@ -48,11 +49,11 @@ fun DrawingGraphScreen(
             isNodeSelected = isNodeSelected.value,
             onAddNodeClicked = {
                 viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToAddScreen)
-                navController.navigate(ADD_NODE_SCREEN_ROUT)
+                onNavigateToAddEditScreen()
             },
             onEditNodeClicked = {
                 viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToEditScreen)
-                navController.navigate(ADD_NODE_SCREEN_ROUT)
+                onNavigateToAddEditScreen()
             })
 
         if(runAlgorithmButtonVisibility.value) {
@@ -60,7 +61,7 @@ fun DrawingGraphScreen(
                 Modifier.align(Alignment.BottomCenter),
                 onClick = {
                     viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToRunAlgorithms)
-                    navController.navigate(MainActivity.CHOOSE_ALGORITHMS_SCREEN_ROUT)
+                    onNavigateToChooseAlgorithmScreen()
                 }
             )
         }

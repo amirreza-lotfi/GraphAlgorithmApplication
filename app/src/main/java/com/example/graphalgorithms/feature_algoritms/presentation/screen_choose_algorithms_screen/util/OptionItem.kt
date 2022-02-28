@@ -3,6 +3,6 @@ package com.example.graphalgorithms.feature_algoritms.presentation.screen_choose
 data class OptionItem(
     val route:String,
     val title:String,
-    val content:String,
+    val content:String = "",
     var isItemSelected:Boolean = false,
 )

@@ -14,4 +14,5 @@ data class UseCases(
     val addEdgeUseCase: AddEdgeUseCase,
     val deleteEdgeUseCase: DeleteEdgeUseCase,
     val getEdges: GetEdges,
+    val undirectedGraph: UndirectedGraph
 )

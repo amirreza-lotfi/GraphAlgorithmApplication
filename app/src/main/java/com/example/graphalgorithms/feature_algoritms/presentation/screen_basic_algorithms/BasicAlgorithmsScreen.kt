@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.graphalgorithms.feature_algoritms.presentation.RunAlgorithmsViewModel
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.components_of_basic_algorithms.component.NonRunnableAlgorithms
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.components_of_basic_algorithms.component.RunnableWithStarterNodeAlgorithms
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.components_of_basic_algorithms.component.TitleOfAlgorithmsType
@@ -22,15 +21,11 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun BasicAlgorithmsScreen(
-    navController: NavController,
-    viewModel: BasicAlgorithmsViewModel = BasicAlgorithmsViewModel(
-        hiltViewModel(
-        navController.getBackStackEntry("ChooseAlgorithmsScreen")
-        )
-    )
+    viewModel: BasicAlgorithmsViewModel,
+    onNavigateToBFSScreen: (startingNode:String)->Unit,
+    onNavigateToDFSScreen: (startingNode:String) -> Unit
 ) {
 
-    val viewModelScope = rememberCoroutineScope()
     Box(Modifier.fillMaxSize()){
         Column(
             Modifier.padding(
@@ -42,40 +37,16 @@ fun BasicAlgorithmsScreen(
             TitleOfAlgorithmsType(title = "Basic Algorithms")
 
             RunnableWithStarterNodeAlgorithms(algorithmsName = "BFS algorithm", viewModel= viewModel) {
-                viewModelScope.launch {
-                    navController.navigate("BFSTraversalScreen")
-                    viewModel.onEvent(BasicAlgorithmsEvent.OnNavigateToBFSScreen)
-                }
+                onNavigateToBFSScreen(viewModel.starterNodeForBfsAlgorithms)
             }
             RunnableWithStarterNodeAlgorithms(algorithmsName = "DFS algorithm",viewModel= viewModel) {
-                viewModelScope.launch {
-                    navController.navigate("DFSTraversalScreen")
-                    viewModel.onEvent(BasicAlgorithmsEvent.OnNavigateToDFSScreen)
-                }
+                onNavigateToDFSScreen(viewModel.starterNodeForBfsAlgorithms)
             }
-            RunnableWithStarterNodeAlgorithms(algorithmsName = "Find mother vertex in a graph",viewModel= viewModel) {
-                //todo find mother
-            }
-            NonRunnableAlgorithms(question = "Is graph connected?", answer = "")
-            NonRunnableAlgorithms(question = "Is graph complete?", answer = "")
-            NonRunnableAlgorithms(question = "Is graph monotonic?", answer = "")
+
+            NonRunnableAlgorithms(question = "Is graph connected?", answer = viewModel.isGraphConnected.value)
+            NonRunnableAlgorithms(question = "Is graph complete?", answer = viewModel.isGraphComplete.value)
             NonRunnableAlgorithms(question = "Has graph cycle?", answer = "")
             NonRunnableAlgorithms(question = "Count number of trees in a forest : ", answer = "")
         }
     }
-
-
 }
-/**
- *   is graph complete?
- *   is graph hamband?
- *   is graph yeknavakht?
- *   has graph cycle?
- *   number of nodes in each level. %
- *   BFS traversal
- *   DFS traversal
- *   find mother vertex in a graph
- *   Count all possible paths between two vertices %
- *   Count number of trees in a forest
- *   Transpose graph
-* */

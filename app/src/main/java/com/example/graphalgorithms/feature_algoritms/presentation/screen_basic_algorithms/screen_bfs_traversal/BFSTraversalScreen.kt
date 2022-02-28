@@ -22,12 +22,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun BFSTraversalScreen(
     navController: NavController,
+    startingNode:String,
     bfsViewModel: BFSTraversalViewModel = BFSTraversalViewModel(
         hiltViewModel(
             navController.getBackStackEntry("BasicAlgorithmsScreen")
         )
     )
 ) {
+    bfsViewModel.starterNodeForBfsAlgorithms = startingNode
+
     val viewModelScope = rememberCoroutineScope()
 
     val visitedNodes = remember{ mutableStateListOf<Node>()}

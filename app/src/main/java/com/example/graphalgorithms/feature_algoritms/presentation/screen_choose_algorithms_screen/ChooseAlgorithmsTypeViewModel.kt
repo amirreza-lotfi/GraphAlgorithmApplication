@@ -4,12 +4,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.graphalgorithms.MainActivity.Companion.BASIC_ALGORITHMS_SCREEN_ROUT
+import com.example.graphalgorithms.MainActivity.Companion.SHORT_PATH_SCREEN_ROUT
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_choose_algorithms_screen.util.OptionItem
 
 class ChooseAlgorithmsTypeViewModel:ViewModel(){
+    private val _selectedItem = mutableStateOf(0)
+
     val options = mutableStateListOf(
         OptionItem(
-           BASIC_ALGORITHMS_SCREEN_ROUT,
+            BASIC_ALGORITHMS_SCREEN_ROUT,
             "Basic Algorithms",
             "24 algorithms",
             true),
@@ -20,7 +23,7 @@ class ChooseAlgorithmsTypeViewModel:ViewModel(){
             "24 algorithms"),
 
         OptionItem(
-            "ShortPathAlgorithmsScreen",
+            SHORT_PATH_SCREEN_ROUT,
             "Short Path Algorithms",
             "24 algorithms"),
 
@@ -35,7 +38,6 @@ class ChooseAlgorithmsTypeViewModel:ViewModel(){
             "24 algorithms"),
     )
 
-    private val _selectedItem = mutableStateOf(0)
 
 
     fun getSelectedOption():OptionItem{
