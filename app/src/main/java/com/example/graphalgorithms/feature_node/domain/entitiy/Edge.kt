@@ -10,8 +10,8 @@ data class Edge(
     var id:Int = randomEdgeId()
 ){
     companion object{
-        fun getEdgeDbEntity(edge: Edge):EdgeInDatabase{
-            return EdgeInDatabase(
+        fun getEdgeDbEntity(edge: Edge):EdgeWithLabels{
+            return EdgeWithLabels(
                 edge.nodeFrom.label,
                 edge.nodeTo.label,
                 edge.weight,

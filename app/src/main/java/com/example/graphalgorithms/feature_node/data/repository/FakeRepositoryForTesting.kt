@@ -1,25 +1,29 @@
 package com.example.graphalgorithms.feature_node.data.repository
 
-import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeInDatabase
+import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.domain.repository.EdgeRepository
 import com.example.graphalgorithms.feature_node.domain.repository.NodeRepository
 
 class FakeRepositoryForTesting: EdgeRepository,NodeRepository {
 
-    private val edgeList = mutableListOf<EdgeInDatabase>()
+    private val edgeList = mutableListOf<EdgeWithLabels>()
     private val nodeList = mutableListOf<Node>()
 
-    override suspend fun add(edge: EdgeInDatabase) {
+    override suspend fun add(edge: EdgeWithLabels) {
         edgeList.add(edge)
     }
 
-    override suspend fun delete(edge: EdgeInDatabase) {
+    override suspend fun delete(edge: EdgeWithLabels) {
         edgeList.remove(edge)
     }
 
-    override suspend fun getEdges(): List<EdgeInDatabase> {
+    override suspend fun getEdges(): List<EdgeWithLabels> {
         return edgeList
+    }
+
+    override suspend fun deleteAllEdges() {
+        edgeList.clear()
     }
 
     override suspend fun add(node: Node) {
@@ -40,5 +44,9 @@ class FakeRepositoryForTesting: EdgeRepository,NodeRepository {
                 return node
         }
         return Node("")
+    }
+
+    override suspend fun deleteAllNodes() {
+        nodeList.clear()
     }
 }

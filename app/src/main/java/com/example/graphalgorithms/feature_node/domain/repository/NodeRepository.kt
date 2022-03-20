@@ -12,4 +12,6 @@ interface NodeRepository{
     suspend fun getNodesFromDatabase(): List<Node>
 
     suspend fun getNodeFromDatabase(label:String):Node
+
+    suspend fun deleteAllNodes()
 }

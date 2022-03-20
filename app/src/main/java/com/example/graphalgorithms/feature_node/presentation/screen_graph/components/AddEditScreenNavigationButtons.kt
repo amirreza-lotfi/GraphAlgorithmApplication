@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun AddEditScreenNavigationButtons(
@@ -22,7 +23,7 @@ fun AddEditScreenNavigationButtons(
             },
             modifier = modifier
         ) {
-            Icon(Icons.Filled.Edit, contentDescription = "add node to screen")
+            Icon(Icons.Filled.Edit, contentDescription = "add node to screen", tint = Color.White)
         }
     }
     else{
@@ -31,7 +32,7 @@ fun AddEditScreenNavigationButtons(
                 onAddNodeClicked()
             }, modifier = modifier
         ) {
-            Icon(Icons.Filled.Add, contentDescription = "add node to screen")
+            Icon(Icons.Filled.Add, contentDescription = "add node to screen", tint = Color.White)
         }
     }
 }

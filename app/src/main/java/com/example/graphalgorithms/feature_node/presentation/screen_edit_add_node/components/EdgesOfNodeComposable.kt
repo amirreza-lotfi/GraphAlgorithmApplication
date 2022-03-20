@@ -17,25 +17,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
+import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEdgeEvent
+import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightYellow
 
 @Composable
 fun EdgesOfNodeComposable(
     viewModelEdit: NodeFeatureViewModel,
 ){
-    val edgesOfNode = viewModelEdit.addEditScreenEntity.value.edges
+    val edgesOfNode = viewModelEdit.entitiesOfAddEditScreen.value.edges
     val recomposition = viewModelEdit.counterForRecomposition
 
     if(recomposition.value>0) {
         LazyColumn {
             items(edgesOfNode) { edge ->
                 EdgeComposable(
-                    viewModelEdit,
                     edge = edge,
                     onDismissIconClicked = {
-                        viewModelEdit.onEdgeEvent(AddEdgeEvent.OnDeleteEdgeClicked(edge))
+                        viewModelEdit.onAddEditScreenEvent(AddEditNodeScreenEvent.OnDeleteEdgeClicked(edge))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -47,8 +47,7 @@ fun EdgesOfNodeComposable(
 
 @Composable
 fun EdgeComposable(
-    viewModelEdit: NodeFeatureViewModel,
-    edge: Edge,
+    edge: EdgeWithLabels,
     onDismissIconClicked:()->Unit
 ){
     Row(
@@ -58,16 +57,17 @@ fun EdgeComposable(
             .clip(CircleShape)
             .background(lightYellow)
     ){
-        val labelTo = if(
-            viewModelEdit.addEditScreenEntity.value.newNode.label == edge.nodeTo.label)
-                edge.nodeFrom.label else edge.nodeTo.label
+        val labelTo = edge.toLabel
+
         Text(" Edge To : $labelTo    Weight : ${edge.weight}",
             Modifier
                 .padding(start = 24.dp)
                 .align(Alignment.CenterVertically),
             fontSize = 18.sp
         )
+
         Spacer(modifier = Modifier.width(16.dp))
+
         Icon(
             Icons.Filled.Delete,
             contentDescription = "remove edge",

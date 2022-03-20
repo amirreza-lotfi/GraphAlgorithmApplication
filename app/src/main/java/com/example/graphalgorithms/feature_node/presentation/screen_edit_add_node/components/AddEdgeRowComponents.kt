@@ -8,12 +8,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEdgeEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 
 @ExperimentalComposeUiApi
 @Composable
-fun AddEdgeRowComponents(
+fun LabelAndAddEdgeComponents(
     viewModel: NodeFeatureViewModel,
     nodesLabels:List<String>,
     onClick:()->Unit
@@ -58,7 +57,7 @@ fun AddEdgeRowComponents(
                 onClick()
                 viewModel.onAddEditScreenEvent(
                 AddEditNodeScreenEvent.SaveEdgeButtonClicked(toLabel.value))
-                viewModel.onEdgeEvent(AddEdgeEvent.OnWeightChanged(""))
+                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnWeightChanged(""))
             },
             Modifier
                 .height(36.dp)

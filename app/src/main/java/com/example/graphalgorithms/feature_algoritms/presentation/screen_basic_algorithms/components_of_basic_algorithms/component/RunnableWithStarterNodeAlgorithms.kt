@@ -44,7 +44,7 @@ fun RunnableWithStarterNodeAlgorithms(
             .height(56.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(lightGray)
-            .padding(12.dp),
+            .padding(vertical = 8.dp, horizontal = 24.dp),
         horizontalArrangement = Arrangement.Center
     ){
         Text(text = algorithmsName,Modifier.align(Alignment.CenterVertically),style = MaterialTheme.typography.body1)

@@ -1,21 +1,18 @@
 package com.example.graphalgorithms.feature_node.presentation
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
-import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeInDatabase
+import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.domain.use_case.UseCases
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEdgeEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.UiEvent
-import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.AddEditScreenEntity
-import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.NodeInformation
+import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.EntitiesOfAddEditScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -29,8 +26,8 @@ import kotlin.random.Random
 class NodeFeatureViewModel @Inject constructor(
     private val useCases: UseCases
 ):ViewModel(){
-    private val _nodeList = mutableStateListOf<Node>()
-    val nodeList: SnapshotStateList<Node> = _nodeList
+    private var _nodeList = mutableStateListOf<Node>()
+    var nodeList: SnapshotStateList<Node> = _nodeList
 
     private var _edgeList = mutableStateListOf<Edge>()
     var edgeList:SnapshotStateList<Edge> = _edgeList
@@ -42,6 +39,9 @@ class NodeFeatureViewModel @Inject constructor(
 
     val redrawEdges = mutableStateOf(1)
 
+    private val _isAddButtonSelected = mutableStateOf(false)
+    val isAddButtonSelected:State<Boolean> = _isAddButtonSelected
+
     private val _uiEventFlow = MutableSharedFlow<UiEvent>()
     val uiEventFlow = _uiEventFlow.asSharedFlow()
 
@@ -49,8 +49,8 @@ class NodeFeatureViewModel @Inject constructor(
     val runAlgorithmButtonVisibility:State<Boolean> = _runAlgorithmButtonVisibility
 
     //Add edit screen properties
-    private val _addEditScreenEntity = mutableStateOf(AddEditScreenEntity())
-    val addEditScreenEntity:State<AddEditScreenEntity> = _addEditScreenEntity
+    private val _addEditScreenEntity = mutableStateOf(EntitiesOfAddEditScreen())
+    val entitiesOfAddEditScreen:State<EntitiesOfAddEditScreen> = _addEditScreenEntity
 
     val counterForRecomposition = mutableStateOf(1)
 
@@ -58,50 +58,11 @@ class NodeFeatureViewModel @Inject constructor(
     init{
         this.getGraphFromDataBase()
     }
-
-    fun onAddEditScreenEvent(eventEdit: AddEditNodeScreenEvent){
-        when(eventEdit){
-            is AddEditNodeScreenEvent.OnSaveEditNodeButtonClicked-> {
-                setAddedNodeLabel(eventEdit.label)
-                saveValidation()
-            }
-            is AddEditNodeScreenEvent.OnCancelEditNodeButtonClicked->{
-                resetAddEditEntity()
-            }
-            is AddEditNodeScreenEvent.SaveEdgeButtonClicked->{
-                recomposeEdgeListPresentation()
-
-                val nodeFrom = _addEditScreenEntity.value.newNode
-                val nodeTo = findNodeByLabel(eventEdit.toNodeLabel)
-                val weight = validatedWeight()
-
-                val edge = Edge(
-                    nodeFrom,
-                    nodeTo,
-                    weight
-                )
-                _addEditScreenEntity.value.edges.add(edge)
-            }
-        }
-    }
-    fun onEdgeEvent(event: AddEdgeEvent){
-        when(event){
-            is AddEdgeEvent.OnWeightChanged->{
-                _addEditScreenEntity.value = _addEditScreenEntity.value.copy(
-                    weightOfEdge = event.weight
-                )
-            }
-            is AddEdgeEvent.OnDeleteEdgeClicked->{
-                removeEdgeFromNewNode(event.edge)
-            }
-        }
-    }
-
     fun onScreenGraphEvent(event:ScreenGraphEvent){
         when(event){
             is ScreenGraphEvent.OnNodeClicked -> {
                 setSelectedNodeSetting(event.node)
-                setAllNodesUnselected(event.node.label)
+                setOtherNodesUnselected(event.node.label)
             }
             is ScreenGraphEvent.NodePositionChanged->{
                 event.node.setPosition(event.x,event.y)
@@ -111,63 +72,185 @@ class NodeFeatureViewModel @Inject constructor(
                 resetAddEditEntity()
 
                 val selectedNode = findSelectedNode()
-                _addEditScreenEntity.value = _addEditScreenEntity.value.copy(
-                    newNode = selectedNode
-                )
+                _addEditScreenEntity.value.nodeLabel = selectedNode.label
+
                 for(edge:Edge in edgeList) {
-                    if(edge.nodeFrom.label == selectedNode.label ||
-                        edge.nodeTo.label == selectedNode.label)
-                        _addEditScreenEntity.value.edges.add(edge.copy())
+                    if(edge.nodeFrom.label == selectedNode.label){
+                        _addEditScreenEntity.value.edges.add(
+                            EdgeWithLabels(
+                                edge.nodeFrom.label,
+                                edge.nodeTo.label,
+                                edge.weight,
+                                edge.id
+                            )
+                        )
+                    }
+                    else if(edge.nodeTo.label == selectedNode.label) {
+                        _addEditScreenEntity.value.edges.add(
+                            EdgeWithLabels(
+                                edge.nodeTo.label,
+                                edge.nodeFrom.label,
+                                edge.weight,
+                                edge.id
+                            )
+                        )
+                    }
                 }
-                _addEditScreenEntity.value = _addEditScreenEntity.value.copy(
-                    titleOfAddEditScreen = "Edit Node"
-                )
+                _addEditScreenEntity.value.titleOfAddEditScreen = "Edit Node"
             }
             is ScreenGraphEvent.OnNavigateToAddScreen->{
                 resetAddEditEntity()
-
-                _addEditScreenEntity.value = _addEditScreenEntity.value.copy(
-                    titleOfAddEditScreen = "Add Node"
-                )
-            }
-            is ScreenGraphEvent.OnNavigateToRunAlgorithms->{
-                viewModelScope.launch {
-                    saveGraphInDatabase()
-                }
+                _addEditScreenEntity.value.titleOfAddEditScreen = "Add Node"
             }
             is ScreenGraphEvent.SetRunAlgorithmButtonVisibility->{
                 _runAlgorithmButtonVisibility.value = event.visibility
             }
             is ScreenGraphEvent.DeleteSelectedNode->{
                 val deletedNode = findSelectedNode()
-                val mustDeletedEdgeFromDb = mutableListOf<Edge>()
 
-                for(edge:Edge in _edgeList){
-                    if(edge.nodeTo.label == deletedNode.label ||
-                        edge.nodeFrom.label == deletedNode.label){
-                        mustDeletedEdgeFromDb.add(edge)
-                    }
+                _edgeList.removeAll { edge->
+                    edge.nodeFrom.label == deletedNode.label || edge.nodeTo.label == deletedNode.label
                 }
 
-                viewModelScope.launch {
-                    saveGraphInDatabase()
-                    deleteNodeFromDataBase(deletedNode)
-                    for(edge:Edge in mustDeletedEdgeFromDb){
-                        deleteEdgeFromDataBase(edge)
-                    }
-
-                    getGraphFromDataBase()
-                    _isAnyNodeSelected.value = false
+                _nodeList.removeIf {
+                    deletedNode.label == it.label
                 }
 
+                removeNodeFromNodeLabelsRepository(deletedNode)
 
-
-
+                setAllNodesUnselected()
             }
-
         }
     }
 
+    fun onAddEditScreenEvent(eventEdit: AddEditNodeScreenEvent){
+        when(eventEdit){
+            is AddEditNodeScreenEvent.OnSaveNodeButtonClicked-> {
+                if(isNodeLabelValid()){
+                    saveNode()
+                    setAllNodesUnselected()
+                }
+                else{
+                    showErrorSnackBar()
+                }
+            }
+            is AddEditNodeScreenEvent.OnCancelEditNodeButtonClicked->{
+                resetAddEditEntity()
+            }
+            is AddEditNodeScreenEvent.SaveEdgeButtonClicked->{
+                recomposeEdgeListPresentation()
+
+                val edgeWithLabels = EdgeWithLabels(
+                    _addEditScreenEntity.value.nodeLabel,
+                    eventEdit.toNodeLabel,
+                    validatedWeight(),
+                )
+                _addEditScreenEntity.value.edges.add(edgeWithLabels)
+            }
+            is AddEditNodeScreenEvent.OnWeightChanged->{
+                _addEditScreenEntity.value = _addEditScreenEntity.value.copy(
+                    weightOfEdge = eventEdit.weight
+                )
+            }
+            is AddEditNodeScreenEvent.OnNodeLabelChanged->{
+                _addEditScreenEntity.value = _addEditScreenEntity.value.copy(
+                    nodeLabel = eventEdit.nodeLabel
+                )
+            }
+            is AddEditNodeScreenEvent.OnDeleteEdgeClicked->{
+                removeEdgeFromNewNode(eventEdit.edge)
+                _isAddButtonSelected.value = false
+            }
+            is AddEditNodeScreenEvent.OnAddEdgeRowSelection->{
+                _isAddButtonSelected.value = !_isAddButtonSelected.value
+            }
+        }
+    }
+
+    private fun saveNode(){
+        viewModelScope.launch {
+            if(_addEditScreenEntity.value.titleOfAddEditScreen == "Add Node"){
+                addNewNodeToGraph()
+            }else{
+                editNodeInGraph()
+            }
+            _uiEventFlow.emit(UiEvent.SaveNode)
+        }
+
+    }
+    private fun showErrorSnackBar(){
+        viewModelScope.launch {
+            val errorMessageOfValidationOfNodeLabel = problemOfLabel()
+            _uiEventFlow.emit(UiEvent.ShowErrorSnackbar(errorMessageOfValidationOfNodeLabel))
+        }
+    }
+    private fun addNewNodeToGraph(){
+        val newNode = Node(_addEditScreenEntity.value.nodeLabel)
+        addNodeToNodeList(newNode)
+        addListOfEdgeWithLabelToNodeEdges(newNode,_addEditScreenEntity.value.edges)
+    }
+
+    private fun addListOfEdgeWithLabelToNodeEdges(newNode:Node, edgeWithLabels:List<EdgeWithLabels>){
+        for(edge:EdgeWithLabels in edgeWithLabels){
+            val newEdge = Edge(
+                newNode,
+                findNodeByLabel(edge.toLabel,_nodeList),
+                edge.weight,
+                edge.edgeId
+            )
+            addEdgeToEdgeList(newEdge)
+        }
+    }
+
+    private fun editNodeInGraph(){
+        var index = 0
+        val newNode = Node.createCopyNode(findSelectedNode())
+        while (index <_edgeList.size){
+            if(_edgeList[index].nodeFrom.label == newNode.label || _edgeList[index].nodeTo.label == newNode.label) {
+                deleteEdgeFromEdgeList(_edgeList[index])
+            }
+            else{
+                index++
+            }
+        }
+        for(node:Node in _nodeList){
+            if(node.label == newNode.label){
+                _nodeList.remove(node)
+                removeNodeFromNodeLabelsRepository(node)
+                break
+            }
+        }
+        addListOfEdgeWithLabelToNodeEdges(newNode,_addEditScreenEntity.value.edges)
+        addNodeToNodeList(newNode)
+    }
+
+    private fun addNodeToNodeList(node:Node){
+        _nodeList.add(node)
+        addNodeLabelToLabelRepository(node.label)
+    }
+
+    private fun addEdgeToEdgeList(newEdge:Edge){
+        _edgeList.add(newEdge)
+        addEdgeIdToStatic(newEdge)
+    }
+
+    private fun deleteEdgeFromEdgeList(edge:Edge){
+        _edgeList.remove(edge)
+        edgeIdRepository.remove(edge.id)
+    }
+
+
+
+    private fun removeEdgeWithId(id:Int, edgeList:MutableList<Edge>){
+        for(edge:Edge in edgeList)
+        {
+            if(edge.id == id) {
+                edgeList.remove(edge)
+                deleteEdgeFromStaticRepository(edge)
+                return
+            }
+        }
+    }
     private fun findSelectedNode():Node{
         for(node:Node in _nodeList){
             if(node.isNodeSelected)
@@ -176,135 +259,42 @@ class NodeFeatureViewModel @Inject constructor(
         return Node("")
     }
 
-    private suspend fun saveGraphInDatabase(){
+    suspend fun saveGraphInDatabase(){
+        clearDatabase()
         putNodesInDataBase()
         putEdgesInDataBase()
     }
 
-    private suspend fun deleteNodeFromDataBase(deletedNode:Node){
-        useCases.deleteNodeUseCase(deletedNode)
+    private fun clearDatabase(){
+        useCases.deleteAllEdges
+        useCases.deleteAllNodes
     }
-
-    private suspend fun deleteEdgeFromDataBase(edge:Edge){
-        useCases.deleteEdgeUseCase(edge)
-    }
-
     private suspend fun putNodesInDataBase(){
         for(node:Node in _nodeList)
             useCases.addNodeUseCase(node)
     }
-
     private suspend fun putEdgesInDataBase(){
         for(edge:Edge in _edgeList)
             useCases.addEdgeUseCase(edge)
     }
 
-    private fun saveValidation(){
-        var validationLabelResponse = isNodeLabelValid()
 
-        if(validationLabelResponse == "valid"){
-            if(isEditScreen() && hasNodeSaveBefore())
-                editNewNodeAndAddToNodeList()
-            else {
-                if(hasNodeSaveBefore()){
-                    validationLabelResponse = "This label has already been selected. Please choose another name"
-                }else {
-                    addNewNodeToNodeList()
-                }
-            }
-        }
-        else{
-            viewModelScope.launch {
-                _uiEventFlow.emit(UiEvent.ShowErrorSnackbar(validationLabelResponse))
-            }
-        }
-
-    }
-    private fun editNewNodeAndAddToNodeList(){
-        val entity by _addEditScreenEntity
-
-        addEdgesToEdgeListWhichAddedInAddEditScreen()
-
-        val edgeOfNewNode = edgesOfTheNodeAreAtTheTailOrHead()
-
-        for(edge:Edge in edgeOfNewNode){
-            if(!entity.edges.contains(edge)){
-                edgeList.remove(edge)
-                edgeIdRepository.remove(edge.id)
-            }
-        }
-
-        addNodeLabelToLabelRepository(entity.newNode.label)
-        viewModelScope.launch {
-            _uiEventFlow.emit(UiEvent.SaveNode)
-        }
-
+    private fun isNodeLabelValid():Boolean{
+        val label = _addEditScreenEntity.value.nodeLabel
+        return label.isNotEmpty() && label.length == 1 && label.isNotBlank()
     }
 
-    private fun addEdgesToEdgeListWhichAddedInAddEditScreen(){
-        for(edge:Edge in _addEditScreenEntity.value.edges){
-            if(!edgeList.contains(edge)){
-                edgeList.add(edge)
-                edgeIdRepository.add(edge.id)
-            }
-        }
-    }
-
-    private fun edgesOfTheNodeAreAtTheTailOrHead():MutableList<Edge>{
-        val edgeOfNewNode = mutableListOf<Edge>()
-        for(edge:Edge in edgeList){
-            if(edge.nodeFrom.label == _addEditScreenEntity.value.newNode.label ||
-                edge.nodeTo.label == _addEditScreenEntity.value.newNode.label)
-                edgeOfNewNode.add(edge)
-        }
-        return edgeOfNewNode
-    }
-
-    private fun addNewNodeToNodeList(){
-        addEdgesInAddEditEntityToEdgeList()
-        addNewNodeInAddEditEntityToNodeList()
-        viewModelScope.launch {
-            _uiEventFlow.emit(UiEvent.SaveNode)
-        }
-    }
-
-    private fun addEdgesInAddEditEntityToEdgeList(){
-        for(edge:Edge in _addEditScreenEntity.value.edges){
-            edgeList.add(edge)
-            edgeIdRepository.add(edge.id)
-        }
-    }
-
-    private fun addNewNodeInAddEditEntityToNodeList(){
-        nodeList.add(_addEditScreenEntity.value.newNode)
-        addNodeLabelToLabelRepository(_addEditScreenEntity.value.newNode.label)
-    }
-
-    private fun isNodeLabelValid():String{
-        val label = _addEditScreenEntity.value.newNode.label
-
-        if(label.isEmpty()){
+    private fun problemOfLabel():String{
+        val label = _addEditScreenEntity.value.nodeLabel
+        if(label.isEmpty() || label.isBlank()){
             return "The label is empty. choose label for node"
         }
         return if(label.length > 1){
             "The label is too long. please type only one letter "
-        } else{
-            "valid"
         }
-    }
-
-    private fun hasNodeSaveBefore():Boolean{
-        val label = _addEditScreenEntity.value.newNode.label
-
-        return isLabelExist(label)
-    }
-
-    private fun isEditScreen():Boolean{
-        return _addEditScreenEntity.value.titleOfAddEditScreen != "Add Node"
-    }
-
-    private fun setAddedNodeLabel(label:String){
-        _addEditScreenEntity.value.newNode.label = label
+        else{
+            return "The name is not suitable"
+        }
     }
 
     private fun validatedWeight():Float{
@@ -314,15 +304,7 @@ class NodeFeatureViewModel @Inject constructor(
             0f
         }
     }
-
-    private fun findNodeByLabel(s:String):Node{
-        for(node:Node in _nodeList)
-            if(node.label == s)
-                return node
-        return Node(" ")
-    }
-
-    private fun removeEdgeFromNewNode(edge:Edge){
+    private fun removeEdgeFromNewNode(edge:EdgeWithLabels){
         recomposeEdgeListPresentation()
         _addEditScreenEntity.value.edges.remove(edge)
     }
@@ -332,7 +314,7 @@ class NodeFeatureViewModel @Inject constructor(
     }
 
     private fun resetAddEditEntity(){
-        _addEditScreenEntity.value = AddEditScreenEntity()
+        _addEditScreenEntity.value = EntitiesOfAddEditScreen()
     }
 
     private fun setSelectedNodeSetting(selectedNode: Node){
@@ -365,9 +347,8 @@ class NodeFeatureViewModel @Inject constructor(
 
     private suspend fun getEdgesFromDataBase(){
         useCases.getEdges()
-        useCases.getEdges()
             .onEach {edgeDBEntity ->
-                val edge = EdgeInDatabase.getEdge(edgeDBEntity,nodeList)
+                val edge = EdgeWithLabels.getEdge(edgeDBEntity,nodeList)
                 _edgeList.add(edge)
                 addEdgeIdToStatic(edge)
             }
@@ -395,10 +376,17 @@ class NodeFeatureViewModel @Inject constructor(
         edgeIdRepository.add(e.id)
     }
 
-    private fun setAllNodesUnselected(selectedNodeLabel:String){
+    private fun setOtherNodesUnselected(selectedNodeLabel:String){
         for(node:Node in _nodeList)
             if(node.label != selectedNodeLabel)
                 node.isNodeSelected = false
+    }
+    private fun setAllNodesUnselected(){
+        for(node:Node in _nodeList){
+            node.isNodeSelected = false
+        }
+        _isAnyNodeSelected.value = false
+        _isAddButtonSelected.value = false
     }
 
 
@@ -451,6 +439,7 @@ class NodeFeatureViewModel @Inject constructor(
         private fun deleteEdgeFromStaticRepository(edge:Edge){
             edgeIdRepository.remove(edge.id)
         }
+
     }
 
     override fun onCleared() {

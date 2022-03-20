@@ -1,32 +1,31 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_graph
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.example.graphalgorithms.MainActivity
-import com.example.graphalgorithms.MainActivity.Companion
-import com.example.graphalgorithms.MainActivity.Companion.ADD_NODE_SCREEN_ROUT
+import androidx.core.content.res.ResourcesCompat
+import com.example.graphalgorithms.R
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.AddEditScreenNavigationButtons
-import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.AlgorithmScreenNavigationButton
+import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.ActionButtonOfGraph
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.GraphPresentation
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
+import com.example.graphalgorithms.feature_node.presentation.ui.theme.darkGray
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
+import com.example.graphalgorithms.feature_node.presentation.ui.theme.red
+import kotlinx.coroutines.launch
 
 @Composable
 fun GraphScreen(
@@ -35,9 +34,16 @@ fun GraphScreen(
     onNavigateToChooseAlgorithmScreen:()->Unit,
 ){
     val isNodeSelected = viewModel.isAnyNodeSelected
-    val runAlgorithmButtonVisibility by rememberSaveable{
+    val actionButtonVisibility by rememberSaveable{
         mutableStateOf(viewModel.runAlgorithmButtonVisibility)
     }
+    val modifierOfActionButton = Modifier
+        .padding(bottom = 4.dp)
+        .width(176.dp)
+        .height(48.dp)
+        .clip(RoundedCornerShape(8.dp))
+
+    val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = Modifier
             .background(lightGray)
@@ -56,24 +62,43 @@ fun GraphScreen(
                 onNavigateToAddEditScreen()
             })
 
-        if(runAlgorithmButtonVisibility.value) {
-            AlgorithmScreenNavigationButton(
-                Modifier.align(Alignment.BottomCenter),
-                onClick = {
-                    viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToRunAlgorithms)
-                    onNavigateToChooseAlgorithmScreen()
-                }
-            )
-        }
 
         GraphPresentation(viewModel = viewModel)
-
-        if(isNodeSelected.value){
-            Button(onClick = {
-                viewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)
-            }) {
-                Text("Delete", color = Color.White)
+        if(viewModel.nodeList.size==0){
+            Column(
+                Modifier.align(Alignment.Center)
+            ) {
+                Image(
+                    painterResource(R.drawable.empty),
+                    contentDescription = "The graph is empty",
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "The graph is empty!!", color = darkGray, modifier = Modifier.align(CenterHorizontally))
             }
+        }
+        if(isNodeSelected.value){
+            ActionButtonOfGraph(
+                modifier = modifierOfActionButton
+                    .align(Alignment.BottomCenter),
+                text = "Delete Node",
+                buttonColor = red,
+                isButtonVisible = actionButtonVisibility.value,
+                onClick = {viewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)}
+            )
+        }else{
+            ActionButtonOfGraph(
+                modifier = modifierOfActionButton
+                    .align(Alignment.BottomCenter),
+                text = "Run Algorithm",
+                buttonColor = MaterialTheme.colors.primary,
+                isButtonVisible = actionButtonVisibility.value,
+                onClick = {
+                    coroutineScope.launch {
+                        viewModel.saveGraphInDatabase()
+                        onNavigateToChooseAlgorithmScreen()
+                    }
+                }
+            )
         }
     }
 

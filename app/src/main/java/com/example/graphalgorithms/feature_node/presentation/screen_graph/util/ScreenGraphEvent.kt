@@ -7,7 +7,6 @@ sealed class ScreenGraphEvent{
     data class NodePositionChanged(val node: Node, val x:Float, val y:Float):ScreenGraphEvent()
     object OnNavigateToEditScreen:ScreenGraphEvent()
     object OnNavigateToAddScreen:ScreenGraphEvent()
-    object OnNavigateToRunAlgorithms:ScreenGraphEvent()
     data class SetRunAlgorithmButtonVisibility(val visibility:Boolean):ScreenGraphEvent()
     object DeleteSelectedNode:ScreenGraphEvent()
 }

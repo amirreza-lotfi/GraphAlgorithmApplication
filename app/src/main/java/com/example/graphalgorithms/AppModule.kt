@@ -9,9 +9,11 @@ import com.example.graphalgorithms.feature_node.domain.repository.EdgeRepository
 import com.example.graphalgorithms.feature_node.domain.repository.NodeRepository
 import com.example.graphalgorithms.feature_node.domain.use_case.*
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.AddEdgeUseCase
+import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.DeleteAllEdges
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.DeleteEdgeUseCase
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.GetEdges
 import com.example.graphalgorithms.feature_node.domain.use_case.NodeUseCases.AddNodeUseCase
+import com.example.graphalgorithms.feature_node.domain.use_case.NodeUseCases.DeleteAllNodes
 import com.example.graphalgorithms.feature_node.domain.use_case.UseCases
 import dagger.Module
 import dagger.Provides
@@ -56,7 +58,9 @@ object AppModule {
             AddEdgeUseCase(edgeRepository),
             DeleteEdgeUseCase(edgeRepository),
             GetEdges(edgeRepository),
-            UndirectedGraph(nodeRepository,edgeRepository)
+            UndirectedGraph(nodeRepository,edgeRepository),
+            DeleteAllEdges(edgeRepository),
+            DeleteAllNodes(nodeRepository)
         )
     }
 }

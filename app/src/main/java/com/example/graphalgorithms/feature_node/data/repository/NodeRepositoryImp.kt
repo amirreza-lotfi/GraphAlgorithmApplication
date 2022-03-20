@@ -21,4 +21,8 @@ class NodeRepositoryImp(private val daoInterface: NodeDaoInterface):NodeReposito
     override suspend fun getNodeFromDatabase(label: String): Node {
         return daoInterface.getNodeFromDatabase(label)
     }
+
+    override suspend fun deleteAllNodes() {
+        daoInterface.deleteAllNodes()
+    }
 }

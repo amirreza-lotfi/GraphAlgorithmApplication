@@ -4,9 +4,6 @@ package com.example.graphalgorithms.feature_node.presentation.screen_edit_add_no
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -15,13 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.AddEdgeRow
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.EdgesOfNodeComposable
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.LabelTextField
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.TitleOfScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.UiEvent
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.*
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalComposeUiApi
@@ -30,40 +24,29 @@ fun AddEditNodeScreen(
     navController: NavController,
     viewModel: NodeFeatureViewModel
 ){
-    var nodeLabel by rememberSaveable {
-        mutableStateOf(viewModel.addEditScreenEntity.value.newNode.label)
-    }
-
     val context = LocalContext.current
+
+    var nodeLabel = viewModel.entitiesOfAddEditScreen.value.nodeLabel
+
 
     Box(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        Column {
-            TitleOfScreen(viewModel.addEditScreenEntity.value.titleOfAddEditScreen)
-            Column(
-                Modifier.padding(8.dp)
-            ){
-                LabelTextField(
-                    value = nodeLabel,
-                    onValueChange = {
-                        nodeLabel = it
-                    }
-                )
-                AddEdgeRow(viewModel)
+        NodeAndEdgesComponents(
+            viewModel = viewModel,
+            nodeLabel = nodeLabel,
+            onValueOfNodeLabelChanged = {
+                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnNodeLabelChanged(it))
             }
-            Spacer(Modifier.height(32.dp))
-            EdgesOfNodeComposable(viewModel)
-        }
-
-        FloatingActionButton(
+        )
+        AddEditScreenFloatingActionButton(
+            modifier = Modifier.align(Alignment.BottomEnd),
             onClick = {
-                    viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnSaveEditNodeButtonClicked(nodeLabel))
-                },Modifier.align(Alignment.BottomEnd)) {
-            Icon(Icons.Filled.Save, contentDescription = "save")
-        }
+                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnSaveNodeButtonClicked)
+            }
+        )
 
         LaunchedEffect(key1 = true){
             viewModel.uiEventFlow.collectLatest{ event->

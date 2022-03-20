@@ -17,9 +17,12 @@ interface NodeDaoInterface {
     @Delete
     suspend fun delete(node: Node):Int
 
-    @Query("select * from node_table order by label Desc")
+    @Query("select * from node_table order by label ASC")
     suspend fun getNodesFromDatabase(): List<Node>
 
     @Query("select * from node_table where label==:labelInput")
     suspend fun getNodeFromDatabase(labelInput:String):Node
+
+    @Query("delete from node_table")
+    suspend fun deleteAllNodes()
 }

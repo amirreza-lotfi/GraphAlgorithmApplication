@@ -6,7 +6,7 @@ import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewMode
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel.Companion.randomEdgeId
 
 @Entity(tableName = "edge_table")
-data class EdgeInDatabase(
+data class EdgeWithLabels(
     val fromLabel:String,
     val toLabel: String,
     var weight:Float = 0f,
@@ -14,12 +14,12 @@ data class EdgeInDatabase(
     var edgeId:Int = randomEdgeId()
 ){
     companion object{
-        fun getEdge(edgeInDatabase:EdgeInDatabase, nodeList: List<Node>):Edge{
+        fun getEdge(edgeWithLabels:EdgeWithLabels, nodeList: List<Node>):Edge{
             return Edge(
-                findNodeByLabel(edgeInDatabase.fromLabel,nodeList),
-                findNodeByLabel(edgeInDatabase.toLabel,nodeList),
-                edgeInDatabase.weight,
-                edgeInDatabase.edgeId,
+                findNodeByLabel(edgeWithLabels.fromLabel,nodeList),
+                findNodeByLabel(edgeWithLabels.toLabel,nodeList),
+                edgeWithLabels.weight,
+                edgeWithLabels.edgeId,
             )
         }
     }

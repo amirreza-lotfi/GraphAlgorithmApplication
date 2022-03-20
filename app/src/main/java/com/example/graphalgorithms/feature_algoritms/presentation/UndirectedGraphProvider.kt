@@ -1,10 +1,9 @@
 package com.example.graphalgorithms.feature_algoritms.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
-import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeInDatabase
+import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,7 +51,7 @@ class UndirectedGraphProvider @Inject constructor(
 
         useCases.getEdges()
             .onEach { edgeDBEntity ->
-                val edge = EdgeInDatabase.getEdge(edgeDBEntity,nodeList)
+                val edge = EdgeWithLabels.getEdge(edgeDBEntity,nodeList)
                 mutableListEdge.add(edge)
             }
         edgeList = mutableListEdge
@@ -71,5 +70,13 @@ class UndirectedGraphProvider @Inject constructor(
             )
             toNode.edges.add(anotherEdge)
         }
+    }
+    fun getLabelsName():List<String>{
+
+        val labels:MutableList<String> = mutableListOf()
+        for(node:Node in nodeList){
+            labels.add(node.label)
+        }
+        return labels
     }
 }

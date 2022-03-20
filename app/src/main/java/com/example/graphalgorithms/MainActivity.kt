@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +28,8 @@ import com.example.graphalgorithms.feature_algoritms.presentation.screen_choose_
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_choose_algorithms_screen.ChooseAlgorithmsTypeViewModel
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.ShortPathScreen
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.ShortPathViewModel
+import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.screen_choose_starting_node.ChooseStartingNodeScreen
+import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.screen_dijkstra.DijkstraAlgorithmScreen
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.AddEditNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.GraphScreen
@@ -138,6 +141,35 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        composable(
+                            route = "$CHOOSE_STARTING_NODE_SCREEN_ROUT/{destinationRout}",
+                            arguments = listOf(
+                                navArgument("destinationRout"){
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) {
+                            val destinationRout = it.arguments?.getString("destinationRout")!!
+
+                            ChooseStartingNodeScreen{ startingNode ->
+                                val rout = "$destinationRout/$startingNode"
+                                navController.navigate(rout)
+                            }
+                        }
+
+                        composable(
+                            route = "$DIJKSTRA_ALGORITHM_SCREEN_ROUT/{startingNode}",
+                            arguments = listOf(
+                                navArgument("startingNode"){
+                                    type = NavType.StringType
+                                }
+                            )
+                        ){
+                            val startNode = it.arguments?.getString("startingNode").toString()
+                            DijkstraAlgorithmScreen(navController = navController, startingNode = startNode)
+                        }
+
                     }
                 }
             }
@@ -157,5 +189,6 @@ class MainActivity : ComponentActivity() {
         const val FLOYD_WARSHALL_ALGORITHM_SCREEN_ROUT = "FloydWarshallAlgorithm"
         const val JOHNSON_ALGORITHM_SCREEN_ROUT = "JohnsonAlgorithm"
         const val DIAL_ALGORITHM_SCREEN_ROUT = "DialAlgorithm"
+        const val CHOOSE_STARTING_NODE_SCREEN_ROUT = "ChooseStartingNodeScreen"
     }
 }

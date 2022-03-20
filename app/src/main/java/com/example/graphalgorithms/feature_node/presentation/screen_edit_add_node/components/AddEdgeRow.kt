@@ -9,24 +9,33 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
+import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEdgeEvent
-import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel.Companion.hasNoNodeInGraph
+import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 
 @ExperimentalComposeUiApi
 @Composable
 fun AddEdgeRow(
     viewModel: NodeFeatureViewModel,
 ){
-    var isAddButtonSelected by rememberSaveable{ mutableStateOf(false)}
+    val isAddButtonSelected = viewModel.isAddButtonSelected.value
+
+    val nodesLabels = NodeFeatureViewModel.getNodeLabels()
+    val availableNodesInEdgeList = mutableListOf<String>()
+
+    for(edge: EdgeWithLabels in viewModel.entitiesOfAddEditScreen.value.edges){
+        availableNodesInEdgeList.add(edge.toLabel)
+    }
+    availableNodesInEdgeList.add(viewModel.entitiesOfAddEditScreen.value.nodeLabel)
+    nodesLabels.removeAll(availableNodesInEdgeList)
 
     Spacer(modifier = Modifier.height(16.dp))
     Column {
         if (!hasNoNodeInGraph()) {
             Button(
                 onClick = {
-                    isAddButtonSelected = !isAddButtonSelected
+                    viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnAddEdgeRowSelection)
                 },
                 modifier = Modifier.fillMaxWidth()
             ){
@@ -43,18 +52,14 @@ fun AddEdgeRow(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val nodesLabels = NodeFeatureViewModel.getNodeLabels()
-
-                for(edge: Edge in viewModel.addEditScreenEntity.value.edges){
-                    nodesLabels.remove(edge.nodeTo.label)
-                    nodesLabels.remove(edge.nodeFrom.label)
-                }
 
                 if (isAddButtonSelected && nodesLabels.size>0) {
-                    AddEdgeRowComponents(
+                    LabelAndAddEdgeComponents(
                         viewModel,
                         nodesLabels,
-                        onClick = {isAddButtonSelected = !isAddButtonSelected}
+                        onClick = {
+                            viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnAddEdgeRowSelection)
+                        }
                     )
                 }
             }

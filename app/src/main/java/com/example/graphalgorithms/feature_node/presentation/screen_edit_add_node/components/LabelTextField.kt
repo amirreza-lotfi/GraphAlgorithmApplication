@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun LabelTextField(
     value:String,
-    onValueChange:(it:String)->Unit
+    onValueChange:(it:String)->Unit,
+    typeOfScreen:String,
 ){
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -29,6 +30,7 @@ fun LabelTextField(
         singleLine = true,
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()})
+        keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()}),
+        enabled = typeOfScreen != "Edit Node"
     )
 }

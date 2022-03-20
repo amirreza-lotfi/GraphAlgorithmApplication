@@ -26,4 +26,14 @@ data class Node(@PrimaryKey var label:String) {
         this.xNodePosition = node.xNodePosition
         this.yNodePosition = node.yNodePosition
     }
+    companion object {
+        fun createCopyNode(node: Node): Node {
+            val newNode = Node(node.label)
+            newNode.isNodeSelected = node.isNodeSelected
+            newNode.label = node.label
+            newNode.xNodePosition = node.xNodePosition
+            newNode.yNodePosition = node.yNodePosition
+            return newNode
+        }
+    }
 }

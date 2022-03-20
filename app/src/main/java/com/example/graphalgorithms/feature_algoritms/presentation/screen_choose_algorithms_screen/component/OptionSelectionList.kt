@@ -13,6 +13,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.graphalgorithms.MainActivity
+import com.example.graphalgorithms.MainActivity.Companion.CHOOSE_STARTING_NODE_SCREEN_ROUT
 import com.example.graphalgorithms.feature_algoritms.presentation.screen_choose_algorithms_screen.util.OptionItem
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.orange
 
@@ -52,8 +54,7 @@ fun OptionSelectionList(
         }
         Button(
             onClick = {
-                val route = rout
-                onNavigateToAlgorithmsScreen(route)
+                onNavigateToAlgorithmsScreen(rout)
             },
             modifier = Modifier
                 .padding(bottom = 16.dp)
