@@ -54,6 +54,8 @@ class NodeFeatureViewModel @Inject constructor(
 
     val counterForRecomposition = mutableStateOf(1)
 
+    val reDrawNodes = mutableStateOf(1)
+
 
     init{
         this.getGraphFromDataBase()
@@ -108,17 +110,18 @@ class NodeFeatureViewModel @Inject constructor(
             is ScreenGraphEvent.DeleteSelectedNode->{
                 val deletedNode = findSelectedNode()
 
-                _edgeList.removeAll { edge->
-                    edge.nodeFrom.label == deletedNode.label || edge.nodeTo.label == deletedNode.label
+                nodeList.removeIf {
+                    deletedNode.label == it.label
                 }
 
-                _nodeList.removeIf {
-                    deletedNode.label == it.label
+                _edgeList.removeAll { edge->
+                    edge.nodeFrom.label == deletedNode.label || edge.nodeTo.label == deletedNode.label
                 }
 
                 removeNodeFromNodeLabelsRepository(deletedNode)
 
                 setAllNodesUnselected()
+
             }
         }
     }
@@ -402,10 +405,6 @@ class NodeFeatureViewModel @Inject constructor(
                     edgeIdRepository.add(randomInt)
                 return randomInt
             }
-        }
-
-        fun isLabelExist(s:String):Boolean{
-            return nodeLabels.contains(s)
         }
 
         fun findNodeByLabel(s:String, nodeList:List<Node>):Node {

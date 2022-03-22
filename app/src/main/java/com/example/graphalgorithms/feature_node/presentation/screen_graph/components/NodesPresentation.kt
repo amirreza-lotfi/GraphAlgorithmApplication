@@ -1,7 +1,6 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_graph.components
 
-import android.util.DisplayMetrics
-import android.util.Log
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -31,9 +30,11 @@ import kotlin.math.roundToInt
 fun NodesPresentation(
     viewModel: NodeFeatureViewModel
 ) {
-    val nodeList = viewModel.nodeList
-    for(node: Node in nodeList){
-        DrawNode(node, viewModel)
+    if(viewModel.reDrawNodes.value!=0) {
+        val nodeList = viewModel.nodeList
+        for (node: Node in nodeList) {
+            DrawNode(node, viewModel)
+        }
     }
 }
 
@@ -44,6 +45,8 @@ fun DrawNode(
 ){
     var offsetXNode by remember { mutableStateOf(node.xNodePosition) }
     var offsetYNode by remember { mutableStateOf(node.yNodePosition) }
+
+
 
     val colorOfNode = if(node.isNodeSelected) Color.Red else teal
 
@@ -83,16 +86,15 @@ fun DrawNode(
                         change.consumeAllChanges()
                         offsetXNode += dragAmount.x
                         offsetYNode += dragAmount.y
-                        Log.i("position","offsetX:${offsetXNode.toDp()} offsetY:${offsetYNode.toDp()}  screen size: $screenHeight * $screenWidth")
-                        if(offsetXNode.toDp() < 30f.toDp())
+                        if (offsetXNode.toDp() < 30f.toDp())
                             offsetXNode = 30f
-                        else if(offsetXNode.toDp()+90.dp > screenWidth)
-                            offsetXNode = (screenWidth-90.dp).toPx()
+                        else if (offsetXNode.toDp() + 90.dp > screenWidth)
+                            offsetXNode = (screenWidth - 90.dp).toPx()
 
-                        if(offsetYNode.toDp() < 30f.toDp())
+                        if (offsetYNode.toDp() < 30f.toDp())
                             offsetYNode = 30f
-                        else if(offsetYNode.toDp()+160.dp > screenHeight)
-                            offsetYNode = (screenHeight-160.dp).toPx()
+                        else if (offsetYNode.toDp() + 160.dp > screenHeight)
+                            offsetYNode = (screenHeight - 160.dp).toPx()
 
 
                         viewModel.onScreenGraphEvent(

@@ -83,7 +83,10 @@ fun GraphScreen(
                 text = "Delete Node",
                 buttonColor = red,
                 isButtonVisible = actionButtonVisibility.value,
-                onClick = {viewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)}
+                onClick = {
+                    viewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)
+                    viewModel.reDrawNodes.value+=1
+                }
             )
         }else{
             ActionButtonOfGraph(
