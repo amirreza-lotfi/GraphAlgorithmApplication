@@ -18,7 +18,7 @@ fun NodeAndEdgesComponents(
     onValueOfNodeLabelChanged:(it:String)->Unit
 ) {
     Column {
-        TitleOfScreen(viewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen)
+        TitleOfScreenXXX(viewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen)
         Column(
             Modifier.padding(8.dp)
         ){

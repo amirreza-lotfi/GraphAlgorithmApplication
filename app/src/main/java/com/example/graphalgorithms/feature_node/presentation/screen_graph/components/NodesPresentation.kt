@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 fun NodesPresentation(
     viewModel: NodeFeatureViewModel
 ) {
-    if(viewModel.reDrawNodes.value!=0) {
+    key(viewModel.nodeList.size) {
         val nodeList = viewModel.nodeList
         for (node: Node in nodeList) {
             DrawNode(node, viewModel)
@@ -59,7 +59,7 @@ fun DrawNode(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(48.dp)
+                .size(44.dp)
                 .offset {
                     IntOffset(
                         offsetXNode.roundToInt(),
@@ -93,8 +93,8 @@ fun DrawNode(
 
                         if (offsetYNode.toDp() < 30f.toDp())
                             offsetYNode = 30f
-                        else if (offsetYNode.toDp() + 160.dp > screenHeight)
-                            offsetYNode = (screenHeight - 160.dp).toPx()
+                        else if (offsetYNode.toDp() + 235.dp > screenHeight)
+                            offsetYNode = (screenHeight - 235.dp).toPx()
 
 
                         viewModel.onScreenGraphEvent(

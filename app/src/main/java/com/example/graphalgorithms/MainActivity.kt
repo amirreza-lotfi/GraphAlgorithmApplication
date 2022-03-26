@@ -12,24 +12,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.graphalgorithms.feature_algoritms.presentation.UndirectedGraphProvider
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.BasicAlgorithmsScreen
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.BasicAlgorithmsViewModel
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.screen_bfs_traversal.BFSTraversalScreen
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.screen_bfs_traversal.BFSTraversalViewModel
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms.screen_dfs_traversal.DfsViewModel
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_choose_algorithms_screen.ChooseAlgorithmTypeScreen
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_choose_algorithms_screen.ChooseAlgorithmsTypeViewModel
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.ShortPathScreen
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.ShortPathViewModel
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.screen_choose_starting_node.ChooseStartingNodeScreen
-import com.example.graphalgorithms.feature_algoritms.presentation.screen_short_path_algorithms.screen_dijkstra.DijkstraAlgorithmScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.UndirectedGraphProvider
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.BasicAlgorithmsScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.BasicAlgorithmsViewModel
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.BFSTraversalScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_algorithms_screen.ChooseAlgorithmTypeScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_algorithms_screen.ChooseAlgorithmsTypeViewModel
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.ShortPathScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.ShortPathViewModel
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_choose_starting_node.ChooseStartingNodeScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.DijkstraAlgorithmScreen
 import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.AddEditNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.GraphScreen
@@ -80,11 +77,14 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = CHOOSE_ALGORITHMS_SCREEN_ROUT) {
                             val viewModel = ChooseAlgorithmsTypeViewModel()
-                            val undirectedGraphProvider:UndirectedGraphProvider = hiltViewModel()
+                            val undirectedGraphProvider: UndirectedGraphProvider = hiltViewModel()
 
                             ChooseAlgorithmTypeScreen(viewModel,
                                 onNavigateToAlgorithmsScreen = { route->
                                     navController.navigate(route)
+                                },
+                                onBackArrowClicked = {
+                                    navController.popBackStack()
                                 }
                             )
                         }
@@ -98,12 +98,16 @@ class MainActivity : ComponentActivity() {
                                 )
                             )
 
-                            BasicAlgorithmsScreen(viewModel,
+                            BasicAlgorithmsScreen(
+                                viewModel,
                                 onNavigateToBFSScreen = { startingNode ->
                                     navController.navigate("$BFS_TRAVERSAL_SCREEN_ROUT/$startingNode")
                                 },
                                 onNavigateToDFSScreen = { startingNode ->
                                     navController.navigate("$DFS_TRAVERSAL_SCREEN_ROUT/$startingNode")
+                                },
+                                onBackArrowClicked = {
+                                    navController.popBackStack()
                                 }
                             )
                         }
@@ -138,6 +142,9 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 onNavigateToScreen = { route ->
                                     navController.navigate(route)
+                                },
+                                onBackArrowClicked = {
+                                    navController.popBackStack()
                                 }
                             )
                         }

@@ -28,7 +28,7 @@ fun LandingScreen(
         val currentOnTimeout by rememberUpdatedState(onTimeout)
 
         LaunchedEffect(true){
-            delay(40L)
+            delay(2000L)
             currentOnTimeout()
         }
 

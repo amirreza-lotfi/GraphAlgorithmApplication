@@ -108,20 +108,26 @@ class NodeFeatureViewModel @Inject constructor(
                 _runAlgorithmButtonVisibility.value = event.visibility
             }
             is ScreenGraphEvent.DeleteSelectedNode->{
-                val deletedNode = findSelectedNode()
+                viewModelScope.launch {
+                    val deletedNode = findSelectedNode()
 
-                nodeList.removeIf {
-                    deletedNode.label == it.label
+                    _edgeList.removeAll { edge ->
+                        edge.nodeFrom.label == deletedNode.label || edge.nodeTo.label == deletedNode.label
+                    }
+
+                    _nodeList.removeAll {
+                        deletedNode.label == it.label
+                    }
+                    useCases.deleteNodeUseCase(deletedNode)
+                    useCases.deleteAllEdges()
+
+                    _edgeList.onEach {
+                        useCases.addEdgeUseCase(it)
+                    }
+                    removeNodeFromNodeLabelsRepository(deletedNode)
+
+                    setAllNodesUnselected()
                 }
-
-                _edgeList.removeAll { edge->
-                    edge.nodeFrom.label == deletedNode.label || edge.nodeTo.label == deletedNode.label
-                }
-
-                removeNodeFromNodeLabelsRepository(deletedNode)
-
-                setAllNodesUnselected()
-
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.example.graphalgorithms.feature_algoritms.presentation.screen_basic_algorithms
 
-import com.example.graphalgorithms.feature_algoritms.presentation.UndirectedGraphProvider
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_node.data.repository.FakeRepositoryForTesting
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
@@ -10,7 +10,7 @@ import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.Del
 import com.example.graphalgorithms.feature_node.domain.use_case.EdgeUseCases.GetEdges
 import com.example.graphalgorithms.feature_node.domain.use_case.NodeUseCases.AddNodeUseCase
 import com.example.graphalgorithms.feature_node.presentation.MainCoroutineRule
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.BasicAlgorithmsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import com.google.common.truth.Truth.assertThat
