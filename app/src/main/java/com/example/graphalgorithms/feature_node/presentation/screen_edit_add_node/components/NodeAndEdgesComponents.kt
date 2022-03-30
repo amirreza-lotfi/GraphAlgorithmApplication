@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NodeAndEdgesComponents(
-    viewModel:NodeFeatureViewModel,
+    viewModel:ScreenGraphViewModel,
     nodeLabel:String,
     onValueOfNodeLabelChanged:(it:String)->Unit
 ) {

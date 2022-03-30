@@ -7,7 +7,7 @@ import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_dfs_traversal.util.DfsUiEvent
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,7 +33,7 @@ class DfsViewModel(val hiltViewModel: UndirectedGraphProvider):ViewModel(){
 
     private fun depthFirstTraversal(startNodeLabel: String) {
         setAllNodeUnSelected()
-        val startingNode = NodeFeatureViewModel.findNodeByLabel(startNodeLabel,nodeList)
+        val startingNode = ScreenGraphViewModel.findNodeByLabel(startNodeLabel,nodeList)
         dfs(startingNode)
     }
 

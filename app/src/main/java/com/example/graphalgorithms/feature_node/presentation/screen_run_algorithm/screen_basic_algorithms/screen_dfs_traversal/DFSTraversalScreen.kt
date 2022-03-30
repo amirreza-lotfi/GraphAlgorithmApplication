@@ -39,6 +39,16 @@ fun DFSTraversalScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+
+        TitleOfAlgorithmScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .align(Alignment.TopStart),
+            onBackClicked = { navController.popBackStack() },
+            onDescriptionClicked = {/*Todo*/}
+        )
+
         var isPlayButtonVisible by rememberSaveable {
             mutableStateOf(true)
         }

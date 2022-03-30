@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -14,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.UiEvent
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.*
 import kotlinx.coroutines.flow.collectLatest
 
@@ -22,7 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddEditNodeScreen(
     navController: NavController,
-    viewModel: NodeFeatureViewModel
+    viewModel: ScreenGraphViewModel
 ){
     val context = LocalContext.current
 

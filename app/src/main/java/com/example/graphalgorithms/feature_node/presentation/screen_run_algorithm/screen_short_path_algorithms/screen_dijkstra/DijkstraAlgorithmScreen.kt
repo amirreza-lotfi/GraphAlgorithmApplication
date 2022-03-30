@@ -9,11 +9,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.graphalgorithms.MainActivity.Companion.CHOOSE_ALGORITHMS_SCREEN_ROUT
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.component.AdjacencyTable
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.component.AdjacencyTableComposable
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.util.DijkstraUiEvent
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.*
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.util.AdjacencyTable
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -28,16 +29,20 @@ fun DijkstraAlgorithmScreen (
         )
     )
 ){
-    viewModel.startingNode = startingNode
+    viewModel.setStartingNodeLabel(startingNode)
 
     val viewModelScope = rememberCoroutineScope()
 
     val visitedNodes = remember{ mutableStateListOf<Node>() }
     val visitedEdges = remember{ mutableStateListOf<Edge>() }
 
-    val visibilityArray = viewModel.visibility
-    val distances = viewModel.distance
-    val lastNode = viewModel.lastNode
+    val adjacencyTable = remember{
+        mutableStateOf(AdjacencyTable(
+            viewModel.visibility.value,
+            viewModel.distance.value,
+            viewModel.lastNode.value
+        ))
+    }
 
     var isPlayButtonVisible by rememberSaveable {mutableStateOf(true)}
 
@@ -52,6 +57,15 @@ fun DijkstraAlgorithmScreen (
         DrawVisitedEdgeWithRedColor(visitedEdges)
         DrawVisitedNodeWithRedColor(visitedNodes)
 
+        TitleOfAlgorithmScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .align(Alignment.TopStart),
+            onBackClicked = { navController.popBackStack() },
+            onDescriptionClicked = {/*Todo*/}
+        )
+
         PlayAlgorithmsButton(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -64,34 +78,29 @@ fun DijkstraAlgorithmScreen (
                 isPlayButtonVisible = false
             }
         )
-        AdjacencyTable(
+
+        AdjacencyTableComposable(
             modifier = Modifier
-                .fillMaxSize()
                 .align(Alignment.BottomCenter)
-                .padding(50.dp),
+                .padding(horizontal = 24.dp, vertical = 48.dp),
             labels = viewModel.nodesLabel,
-            visibility = visibilityArray.value.toList(),
-            distances = distances.value.toList(),
-            lastNode = lastNode.value.toList()
+            adjacencyTable = adjacencyTable.value
         )
 
         viewModelScope.launch {
             viewModel.uiEvent.collect { event->
                 when(event){
-                    is DijkstraUiEvent.EmitVisibilityArray -> {
-                       // visibilityArray.value = event.visibilityArray
-                    }
-                    is DijkstraUiEvent.EmitDistanceArray -> {
-                        //distances.value = event.distanceArray
-                    }
-                    is DijkstraUiEvent.EmitLastNode -> {
-                       // lastNode.value = event.lastNodeArray
+                    is DijkstraUiEvent.EmitAdjacencyTable -> {
+                       adjacencyTable.value = event.adjacencyTable
                     }
                     is DijkstraUiEvent.EmitVisitedEdge -> {
                         visitedEdges.add(event.edge)
                     }
                     is DijkstraUiEvent.EmitVisitedNode -> {
                         visitedNodes.add(event.node)
+                    }
+                    is DijkstraUiEvent.EmitAlgorithmEnd -> {
+                        isPlayButtonVisible = true
                     }
                 }
             }

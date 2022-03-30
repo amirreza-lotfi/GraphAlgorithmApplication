@@ -3,25 +3,23 @@ package com.example.graphalgorithms.feature_node.presentation.screen_edit_add_no
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel.Companion.hasNoNodeInGraph
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel.Companion.hasNoNodeInGraph
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 
 @ExperimentalComposeUiApi
 @Composable
 fun AddEdgeRow(
-    viewModel: NodeFeatureViewModel,
+    viewModel: ScreenGraphViewModel,
 ){
     val isAddButtonSelected = viewModel.isAddButtonSelected.value
 
-    val nodesLabels = NodeFeatureViewModel.getNodeLabels()
+    val nodesLabels = ScreenGraphViewModel.getNodeLabels()
     val availableNodesInEdgeList = mutableListOf<String>()
 
     for(edge: EdgeWithLabels in viewModel.entitiesOfAddEditScreen.value.edges){

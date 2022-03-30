@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.BasicAlgorithmsViewModel
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 
 @Composable
@@ -22,7 +22,7 @@ fun RunnableWithStarterNodeAlgorithms(
     algorithmsName:String,
     onClickItem:()->Unit
 ) {
-    val nodesLabel = NodeFeatureViewModel.getNodeLabels()
+    val nodesLabel = ScreenGraphViewModel.getNodeLabels()
     val selectedNodeIndex = remember{mutableStateOf(0)}
     val defaultStartNodeLabel = remember {
         mutableStateOf(nodesLabel[selectedNodeIndex.value])

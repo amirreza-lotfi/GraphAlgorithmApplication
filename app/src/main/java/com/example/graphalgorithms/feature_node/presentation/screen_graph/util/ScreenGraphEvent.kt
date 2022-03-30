@@ -3,6 +3,7 @@ package com.example.graphalgorithms.feature_node.presentation.screen_graph.util
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 
 sealed class ScreenGraphEvent{
+    object OnSetGraphPictureVisibility:ScreenGraphEvent()
     data class OnNodeClicked(val node: Node):ScreenGraphEvent()
     data class NodePositionChanged(val node: Node, val x:Float, val y:Float):ScreenGraphEvent()
     object OnNavigateToEditScreen:ScreenGraphEvent()

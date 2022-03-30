@@ -11,25 +11,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
 import com.example.graphalgorithms.R
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.AddEditScreenNavigationButtons
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.ActionButtonOfGraph
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.GraphPresentation
+import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.GraphScreenUiEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.darkGray
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.red
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
 fun GraphScreen(
-    viewModel: NodeFeatureViewModel,
+    viewModel: ScreenGraphViewModel,
     onNavigateToAddEditScreen:()->Unit,
     onNavigateToChooseAlgorithmScreen:()->Unit,
 ){
@@ -37,6 +37,7 @@ fun GraphScreen(
     val actionButtonVisibility by rememberSaveable{
         mutableStateOf(viewModel.runAlgorithmButtonVisibility)
     }
+
     val modifierOfActionButton = Modifier
         .padding(bottom = 4.dp)
         .width(176.dp)
@@ -44,6 +45,7 @@ fun GraphScreen(
         .clip(RoundedCornerShape(8.dp))
 
     val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .background(lightGray)
@@ -64,7 +66,7 @@ fun GraphScreen(
 
 
         GraphPresentation(viewModel = viewModel)
-        if(viewModel.nodeList.size==0){
+        if(viewModel.graphEmptyImageVisibility.value){
             Column(
                 Modifier.align(Alignment.Center)
             ) {
@@ -76,6 +78,7 @@ fun GraphScreen(
                 Text(text = "The graph is empty!!", color = darkGray, modifier = Modifier.align(CenterHorizontally))
             }
         }
+
         if(isNodeSelected.value){
             ActionButtonOfGraph(
                 modifier = modifierOfActionButton
@@ -102,6 +105,16 @@ fun GraphScreen(
                     }
                 }
             )
+        }
+
+        LaunchedEffect(key1 = 1){
+            viewModel.graphScreenUiEvent.collectLatest {
+                when(it){
+                    is GraphScreenUiEvent.OnDataFetched -> {
+                        viewModel.onScreenGraphEvent(ScreenGraphEvent.OnSetGraphPictureVisibility)
+                    }
+                }
+            }
         }
     }
 

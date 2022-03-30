@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.teal
 import kotlin.math.roundToInt
@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun NodesPresentation(
-    viewModel: NodeFeatureViewModel
+    viewModel: ScreenGraphViewModel
 ) {
     key(viewModel.nodeList.size) {
         val nodeList = viewModel.nodeList
@@ -41,7 +41,7 @@ fun NodesPresentation(
 @Composable
 fun DrawNode(
     node: Node,
-    viewModel: NodeFeatureViewModel
+    viewModel: ScreenGraphViewModel
 ){
     var offsetXNode by remember { mutableStateOf(node.xNodePosition) }
     var offsetYNode by remember { mutableStateOf(node.yNodePosition) }

@@ -11,29 +11,42 @@ import androidx.compose.ui.Modifier
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.components_of_basic_algorithms.component.NodesDropDown
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.TitleOfAlgorithmScreen
 
 @Composable
 fun ChooseStartingNodeScreen(
+    navController: NavController,
     onNavigateToDijkstraScreen:(startingNode:String)->Unit,
 ) {
-    val nodeLabels = NodeFeatureViewModel.getNodeLabels()
+    val nodeLabels = ScreenGraphViewModel.getNodeLabels()
     val selectedIndex = rememberSaveable{ mutableStateOf(0)}
     val startNodeLabel = rememberSaveable{ mutableStateOf(nodeLabels[0])}
 
     Box(
         Modifier.fillMaxSize()
-            .padding(36.dp)
+            .padding(16.dp)
     ) {
+        TitleOfAlgorithmScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .align(Alignment.TopStart),
+            onBackClicked = { navController.popBackStack() },
+            onDescriptionClicked = {/*Todo*/}
+        )
+
         Row(
-            Modifier.padding(24.dp),
+            Modifier.padding(start = 24.dp, top = 80.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
            Text(text = "Choose starting node")
            Spacer(modifier = Modifier.width(10.dp))
            NodesDropDown(nodesLabels = nodeLabels, selectedIndex = selectedIndex, startNodeLabel = startNodeLabel)
         }
+
         Button(
             onClick = {
                 onNavigateToDijkstraScreen(startNodeLabel.value)
@@ -44,12 +57,4 @@ fun ChooseStartingNodeScreen(
         }
     }
 
-}
-
-@Preview
-@Composable
-fun test() {
-    ChooseStartingNodeScreen {
-
-    }
 }

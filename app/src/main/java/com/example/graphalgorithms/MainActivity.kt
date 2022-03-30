@@ -8,10 +8,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +28,7 @@ import com.example.graphalgorithms.feature_node.presentation.screen_run_algorith
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.ShortPathViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_choose_starting_node.ChooseStartingNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.DijkstraAlgorithmScreen
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.AddEditNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.GraphScreen
 
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            var showLandingScreen by remember{ mutableStateOf(true)}
+            var showLandingScreen by rememberSaveable{ mutableStateOf(true)}
             if(showLandingScreen){
                 LandingScreen {
                     showLandingScreen = false
@@ -54,14 +55,15 @@ class MainActivity : ComponentActivity() {
             else {
                 GraphAlgorithmsTheme {
                     val navController = rememberNavController()
-                    val nodeFeatureViewModel: NodeFeatureViewModel = hiltViewModel()
+                    val screenGraphViewModel: ScreenGraphViewModel = hiltViewModel()
 
                     NavHost(
                         navController = navController,
                         startDestination = GRAPH_SCREEN_ROUT
                     ) {
+
                         composable(route = GRAPH_SCREEN_ROUT) {
-                            GraphScreen(nodeFeatureViewModel,
+                            GraphScreen(screenGraphViewModel,
                                 onNavigateToAddEditScreen = {
                                     navController.navigate(ADD_NODE_SCREEN_ROUT)
                                 },
@@ -72,14 +74,15 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(route = ADD_NODE_SCREEN_ROUT) {
-                            AddEditNodeScreen(navController = navController, nodeFeatureViewModel)
+                            AddEditNodeScreen(navController = navController, screenGraphViewModel)
                         }
 
                         composable(route = CHOOSE_ALGORITHMS_SCREEN_ROUT) {
-                            val viewModel = ChooseAlgorithmsTypeViewModel()
+                            val viewModel:ChooseAlgorithmsTypeViewModel = viewModel()
                             val undirectedGraphProvider: UndirectedGraphProvider = hiltViewModel()
 
-                            ChooseAlgorithmTypeScreen(viewModel,
+                            ChooseAlgorithmTypeScreen(
+                                viewModel,
                                 onNavigateToAlgorithmsScreen = { route->
                                     navController.navigate(route)
                                 },
@@ -159,7 +162,9 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val destinationRout = it.arguments?.getString("destinationRout")!!
 
-                            ChooseStartingNodeScreen{ startingNode ->
+                            ChooseStartingNodeScreen(
+                                navController = navController
+                            ){ startingNode ->
                                 val rout = "$destinationRout/$startingNode"
                                 navController.navigate(rout)
                             }

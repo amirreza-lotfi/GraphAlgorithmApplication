@@ -8,11 +8,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.DrawSingleEdge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 
 @Composable
 fun EdgePresentation(
-    viewModel: NodeFeatureViewModel
+    viewModel: ScreenGraphViewModel
 ){
     val edgeList: SnapshotStateList<Edge> = viewModel.edgeList
 

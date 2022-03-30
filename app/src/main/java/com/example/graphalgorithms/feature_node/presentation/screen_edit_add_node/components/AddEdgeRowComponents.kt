@@ -7,13 +7,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 
 @ExperimentalComposeUiApi
 @Composable
 fun LabelAndAddEdgeComponents(
-    viewModel: NodeFeatureViewModel,
+    viewModel: ScreenGraphViewModel,
     nodesLabels:List<String>,
     onClick:()->Unit
 ) {

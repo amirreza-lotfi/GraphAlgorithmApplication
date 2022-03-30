@@ -16,15 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightYellow
 
 @Composable
 fun EdgesOfNodeComposable(
-    viewModelEdit: NodeFeatureViewModel,
+    viewModelEdit: ScreenGraphViewModel,
 ){
     val edgesOfNode = viewModelEdit.entitiesOfAddEditScreen.value.edges
     val recomposition = viewModelEdit.counterForRecomposition

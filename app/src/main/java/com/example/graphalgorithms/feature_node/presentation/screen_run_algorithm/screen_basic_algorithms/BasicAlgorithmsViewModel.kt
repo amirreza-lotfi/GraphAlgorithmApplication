@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_node.presentation.NodeFeatureViewModel
+import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 class BasicAlgorithmsViewModel(val hiltViewModel: UndirectedGraphProvider) :ViewModel(){
 
-    var starterNodeForBfsAlgorithms:String = NodeFeatureViewModel.getNodeLabels()[0]
+    var starterNodeForBfsAlgorithms:String = ScreenGraphViewModel.getNodeLabels()[0]
 
     var nodeList:List<Node> = hiltViewModel.nodeList
     var edgeList:List<Edge> = hiltViewModel.edgeList

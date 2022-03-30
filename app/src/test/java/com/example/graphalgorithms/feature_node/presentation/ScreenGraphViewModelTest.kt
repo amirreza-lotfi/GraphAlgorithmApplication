@@ -1,6 +1,5 @@
 package com.example.graphalgorithms.feature_node.presentation
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.graphalgorithms.feature_node.data.repository.FakeRepositoryForTesting
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.domain.use_case.*
@@ -11,15 +10,14 @@ import com.example.graphalgorithms.feature_node.domain.use_case.NodeUseCases.Add
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 
 import org.junit.Test
 
-class NodeFeatureViewModelTest{
-    private lateinit var viewModel: NodeFeatureViewModel
+class ScreenGraphViewModelTest{
+    private lateinit var viewModel: ScreenGraphViewModel
     private lateinit var useCases: UseCases
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,9 +34,10 @@ class NodeFeatureViewModelTest{
             AddEdgeUseCase(FakeRepositoryForTesting()),
             DeleteEdgeUseCase(FakeRepositoryForTesting()),
             GetEdges(FakeRepositoryForTesting()),
-            UndirectedGraph(FakeRepositoryForTesting(),FakeRepositoryForTesting())
+            UndirectedGraph(FakeRepositoryForTesting(),FakeRepositoryForTesting()),
+
         )
-        viewModel = NodeFeatureViewModel(useCases)
+        viewModel = ScreenGraphViewModel(useCases)
     }
 
     @Test
@@ -47,7 +46,7 @@ class NodeFeatureViewModelTest{
         useCases.addNodeUseCase(Node("b"))
         useCases.addNodeUseCase(Node("c"))
 
-        viewModel = NodeFeatureViewModel(useCases)
+        viewModel = ScreenGraphViewModel(useCases)
 
         val first = viewModel.nodeList[0]
         val second = viewModel.nodeList[1]
@@ -71,7 +70,7 @@ class NodeFeatureViewModelTest{
         useCases.addNodeUseCase(Node("b"))
         useCases.addNodeUseCase(Node("c"))
 
-        viewModel = NodeFeatureViewModel(useCases)
+        viewModel = ScreenGraphViewModel(useCases)
 
         val first = viewModel.nodeList[0]
 

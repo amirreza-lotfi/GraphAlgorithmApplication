@@ -1,7 +1,12 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -42,6 +47,15 @@ fun BFSTraversalScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        TitleOfAlgorithmScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .align(Alignment.TopStart),
+            onBackClicked = { navController.popBackStack() },
+            onDescriptionClicked = {/*Todo*/}
+        )
+
         var isPlayButtonVisible by rememberSaveable {
             mutableStateOf(true)
         }
@@ -57,7 +71,8 @@ fun BFSTraversalScreen(
         visitedNodeText = bfsViewModel.getVisitedNodeTextForScreen(visitedNodes)
 
         DataComposable(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(136.dp)
                     .align(Alignment.BottomCenter),
                 isPlayButtonVisible = isPlayButtonVisible ,

@@ -13,6 +13,7 @@ import com.example.graphalgorithms.feature_node.domain.use_case.UseCases
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.UiEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.EntitiesOfAddEditScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.GraphScreenUiEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -23,7 +24,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class NodeFeatureViewModel @Inject constructor(
+class ScreenGraphViewModel @Inject constructor(
     private val useCases: UseCases
 ):ViewModel(){
     private var _nodeList = mutableStateListOf<Node>()
@@ -31,6 +32,9 @@ class NodeFeatureViewModel @Inject constructor(
 
     private var _edgeList = mutableStateListOf<Edge>()
     var edgeList:SnapshotStateList<Edge> = _edgeList
+
+    private val _graphEmptyImageVisibility = mutableStateOf(false)
+    val graphEmptyImageVisibility:State<Boolean> = _graphEmptyImageVisibility
 
     private val _isAnyNodeSelected = mutableStateOf(false)
     val isAnyNodeSelected:State<Boolean> = _isAnyNodeSelected
@@ -44,6 +48,9 @@ class NodeFeatureViewModel @Inject constructor(
 
     private val _uiEventFlow = MutableSharedFlow<UiEvent>()
     val uiEventFlow = _uiEventFlow.asSharedFlow()
+
+    private val _graphScreenUiEvent = MutableSharedFlow<GraphScreenUiEvent>()
+    val graphScreenUiEvent = _graphScreenUiEvent.asSharedFlow()
 
     private val _runAlgorithmButtonVisibility = mutableStateOf(true)
     val runAlgorithmButtonVisibility:State<Boolean> = _runAlgorithmButtonVisibility
@@ -127,7 +134,12 @@ class NodeFeatureViewModel @Inject constructor(
                     removeNodeFromNodeLabelsRepository(deletedNode)
 
                     setAllNodesUnselected()
+
+                    onScreenGraphEvent(ScreenGraphEvent.OnSetGraphPictureVisibility)
                 }
+            }
+            is ScreenGraphEvent.OnSetGraphPictureVisibility->{
+                _graphEmptyImageVisibility.value = nodeList.size==0
             }
         }
     }
@@ -138,6 +150,7 @@ class NodeFeatureViewModel @Inject constructor(
                 if(isNodeLabelValid()){
                     saveNode()
                     setAllNodesUnselected()
+                    onScreenGraphEvent(ScreenGraphEvent.OnSetGraphPictureVisibility)
                 }
                 else{
                     showErrorSnackBar()
@@ -350,6 +363,7 @@ class NodeFeatureViewModel @Inject constructor(
         getNotesJob = viewModelScope.launch {
             getNodesFromDataBase()
             getEdgesFromDataBase()
+            _graphScreenUiEvent.emit(GraphScreenUiEvent.OnDataFetched)
         }
 
     }
