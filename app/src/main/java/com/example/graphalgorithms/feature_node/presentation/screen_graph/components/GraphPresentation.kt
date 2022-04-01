@@ -1,12 +1,12 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_graph.components
 
 import androidx.compose.runtime.Composable
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 
 @Composable
 fun GraphPresentation(
-    viewModel: ScreenGraphViewModel
+    screenViewModel: GraphScreenViewModel
 ){
-    EdgePresentation(viewModel)
-    NodesPresentation(viewModel)
+    EdgePresentation(screenViewModel)
+    NodesPresentation(screenViewModel)
 }

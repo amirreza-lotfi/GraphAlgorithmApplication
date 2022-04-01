@@ -2,8 +2,8 @@ package com.example.graphalgorithms.feature_node.domain.entitiy
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel.Companion.findNodeByLabel
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel.Companion.randomEdgeId
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel.Companion.findNodeByLabel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel.Companion.randomEdgeId
 
 @Entity(tableName = "edge_table")
 data class EdgeWithLabels(

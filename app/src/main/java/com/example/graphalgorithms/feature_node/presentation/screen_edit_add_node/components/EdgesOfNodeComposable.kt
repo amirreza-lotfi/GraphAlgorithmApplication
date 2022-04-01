@@ -17,16 +17,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.graphalgorithms.feature_node.domain.entitiy.EdgeWithLabels
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightYellow
 
 @Composable
 fun EdgesOfNodeComposable(
-    viewModelEdit: ScreenGraphViewModel,
+    screenViewModelEdit: GraphScreenViewModel,
 ){
-    val edgesOfNode = viewModelEdit.entitiesOfAddEditScreen.value.edges
-    val recomposition = viewModelEdit.counterForRecomposition
+    val edgesOfNode = screenViewModelEdit.entitiesOfAddEditScreen.value.edges
+    val recomposition = screenViewModelEdit.counterForRecomposition
 
     if(recomposition.value>0) {
         LazyColumn {
@@ -34,7 +34,7 @@ fun EdgesOfNodeComposable(
                 EdgeComposable(
                     edge = edge,
                     onDismissIconClicked = {
-                        viewModelEdit.onAddEditScreenEvent(AddEditNodeScreenEvent.OnDeleteEdgeClicked(edge))
+                        screenViewModelEdit.onAddEditScreenEvent(AddEditNodeScreenEvent.OnDeleteEdgeClicked(edge))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

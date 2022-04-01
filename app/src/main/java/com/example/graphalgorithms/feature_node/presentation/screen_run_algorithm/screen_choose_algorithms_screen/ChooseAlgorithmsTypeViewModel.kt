@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.graphalgorithms.MainActivity.Companion.BASIC_ALGORITHMS_SCREEN_ROUT
+import com.example.graphalgorithms.MainActivity.Companion.MST_ALGORITHM_SCREEN_ROUT
 import com.example.graphalgorithms.MainActivity.Companion.SHORT_PATH_SCREEN_ROUT
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_algorithms_screen.util.OptionItem
 
@@ -18,7 +19,7 @@ class ChooseAlgorithmsTypeViewModel:ViewModel(){
             true),
 
         OptionItem(
-            "MinimumSpanningTreeScreen",
+            MST_ALGORITHM_SCREEN_ROUT,
             "Minimum Spanning Tree",
             "24 algorithms"),
 

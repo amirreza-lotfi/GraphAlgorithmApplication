@@ -24,7 +24,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class ScreenGraphViewModel @Inject constructor(
+class GraphScreenViewModel @Inject constructor(
     private val useCases: UseCases
 ):ViewModel(){
     private var _nodeList = mutableStateListOf<Node>()

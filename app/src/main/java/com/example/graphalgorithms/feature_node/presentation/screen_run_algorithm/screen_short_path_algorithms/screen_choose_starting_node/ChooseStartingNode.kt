@@ -9,11 +9,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.components_of_basic_algorithms.component.NodesDropDown
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.TitleOfAlgorithmScreen
 
 @Composable
@@ -21,7 +20,7 @@ fun ChooseStartingNodeScreen(
     navController: NavController,
     onNavigateToDijkstraScreen:(startingNode:String)->Unit,
 ) {
-    val nodeLabels = ScreenGraphViewModel.getNodeLabels()
+    val nodeLabels = GraphScreenViewModel.getNodeLabels()
     val selectedIndex = rememberSaveable{ mutableStateOf(0)}
     val startNodeLabel = rememberSaveable{ mutableStateOf(nodeLabels[0])}
 

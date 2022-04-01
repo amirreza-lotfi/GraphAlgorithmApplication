@@ -8,17 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NodeAndEdgesComponents(
-    viewModel:ScreenGraphViewModel,
+    screenViewModel:GraphScreenViewModel,
     nodeLabel:String,
     onValueOfNodeLabelChanged:(it:String)->Unit
 ) {
     Column {
-        TitleOfScreenXXX(viewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen)
+        TitleOfScreenXXX(screenViewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen)
         Column(
             Modifier.padding(8.dp)
         ){
@@ -27,11 +27,11 @@ fun NodeAndEdgesComponents(
                 onValueChange = {
                     onValueOfNodeLabelChanged(it)
                 },
-                typeOfScreen = viewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen
+                typeOfScreen = screenViewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen
             )
-            AddEdgeRow(viewModel)
+            AddEdgeRow(screenViewModel)
         }
         Spacer(Modifier.height(32.dp))
-        EdgesOfNodeComposable(viewModel)
+        EdgesOfNodeComposable(screenViewModel)
     }
 }

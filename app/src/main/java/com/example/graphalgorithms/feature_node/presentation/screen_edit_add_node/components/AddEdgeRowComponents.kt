@@ -7,13 +7,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 
 @ExperimentalComposeUiApi
 @Composable
 fun LabelAndAddEdgeComponents(
-    viewModel: ScreenGraphViewModel,
+    screenViewModel: GraphScreenViewModel,
     nodesLabels:List<String>,
     onClick:()->Unit
 ) {
@@ -45,7 +45,7 @@ fun LabelAndAddEdgeComponents(
 
     Spacer(modifier = Modifier.size(8.dp))
 
-    WeightTextFiled(viewModel)
+    WeightTextFiled(screenViewModel)
 
     Spacer(modifier = Modifier.size(12.dp))
 
@@ -55,9 +55,9 @@ fun LabelAndAddEdgeComponents(
         Button(
             onClick = {
                 onClick()
-                viewModel.onAddEditScreenEvent(
+                screenViewModel.onAddEditScreenEvent(
                 AddEditNodeScreenEvent.SaveEdgeButtonClicked(toLabel.value))
-                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnWeightChanged(""))
+                screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnWeightChanged(""))
             },
             Modifier
                 .height(36.dp)

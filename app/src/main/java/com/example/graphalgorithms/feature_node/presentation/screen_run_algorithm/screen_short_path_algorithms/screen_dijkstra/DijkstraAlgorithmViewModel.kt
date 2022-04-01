@@ -6,8 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.util.DijkstraUiEvent
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
-import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel.Companion.findNodeByLabel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel.Companion.findNodeByLabel
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.util.AdjacencyTable
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

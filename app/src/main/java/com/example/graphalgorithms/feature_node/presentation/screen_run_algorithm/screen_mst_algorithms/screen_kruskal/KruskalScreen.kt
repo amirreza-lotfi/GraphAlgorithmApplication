@@ -1,3 +1,5 @@
+package com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_kruskal
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -7,34 +9,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_dfs_traversal.DfsViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_dfs_traversal.util.DfsUiEvent
+import com.example.graphalgorithms.MainActivity
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.*
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_dfs_traversal.component.DataComposable
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_kruskal.util.KruskalUiEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Composable
-fun DFSTraversalScreen(
+fun KruskalScreen(
     navController: NavController,
-    startingNode:String,
-    dfsViewModel: DfsViewModel = DfsViewModel(
+    kruskalViewModel: KruskalViewModel = KruskalViewModel(
         hiltViewModel(
-            navController.getBackStackEntry("BasicAlgorithmsScreen")
+            navController.getBackStackEntry(MainActivity.CHOOSE_ALGORITHMS_SCREEN_ROUT)
         )
     )
 ) {
-    dfsViewModel.starterNodeForDfsAlgorithms = startingNode
+    val viewModelScope = rememberCoroutineScope()
 
-    val coroutineScope = rememberCoroutineScope()
-    val visitedNodes = remember{ mutableStateListOf<Node>()}
-    val visitedEdges = remember{ mutableStateListOf<Edge>()}
+    val visitedNodes = remember { mutableStateListOf<Node>() }
+    val visitedEdges = remember { mutableStateListOf<Edge>() }
 
-    var visitedNodeText: StringBuffer
-
+    var visitedNodeText:StringBuffer
 
     Box(
         Modifier
@@ -42,7 +41,6 @@ fun DFSTraversalScreen(
             .background(lightGray)
             .padding(16.dp)
     ) {
-
         TitleOfAlgorithmScreen(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,19 +54,19 @@ fun DFSTraversalScreen(
             mutableStateOf(true)
         }
 
-        DrawGraphEdges(dfsViewModel.edgeList)
-        DrawGraphNodes(dfsViewModel.nodeList)
+        DrawGraphEdges(kruskalViewModel.edgeList)
+        DrawGraphNodes(kruskalViewModel.nodeList)
 
         DrawVisitedEdgeWithRedColor(visitedEdges)
         DrawVisitedNodeWithRedColor(visitedNodes)
 
 
-        
-        visitedNodeText = dfsViewModel.getVisitedNodeTextForScreen(visitedNodes)
 
+        visitedNodeText = kruskalViewModel.getVisitedNodeTextForScreen(visitedNodes)
 
         DataComposable(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(136.dp)
                 .align(Alignment.BottomCenter),
             isPlayButtonVisible = isPlayButtonVisible ,
@@ -77,29 +75,26 @@ fun DFSTraversalScreen(
                 visitedNodeText = StringBuffer("")
                 visitedNodes.clear()
                 visitedEdges.clear()
-                dfsViewModel.onPlayButtonClicked()
+                kruskalViewModel.onPlayButtonClicked()
                 isPlayButtonVisible = false
             }
         )
 
-        coroutineScope.launch {
-            dfsViewModel.dfsUiEvent.collect { event ->
+        viewModelScope.launch {
+            kruskalViewModel.kruskalUiEvent.collect { event ->
                 when (event) {
-                    is DfsUiEvent.OnAlgorithmEnds -> {
-                        isPlayButtonVisible = true
-                    }
-                    is DfsUiEvent.DrawNodeOnScreen->{
+                    is KruskalUiEvent.EmitVisitedNode -> {
                         visitedNodes.add(event.node)
                     }
-                    is DfsUiEvent.DrawEdgeOnScreen->{
+                    is KruskalUiEvent.EmitVisitedEdge -> {
                         visitedEdges.add(event.edge)
+                    }
+                    is KruskalUiEvent.OnAlgorithmEnd -> {
+                        isPlayButtonVisible = true
                     }
                 }
             }
         }
     }
+
 }
-
-
-
-

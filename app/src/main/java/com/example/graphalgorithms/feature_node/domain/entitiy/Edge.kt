@@ -1,6 +1,6 @@
 package com.example.graphalgorithms.feature_node.domain.entitiy;
 
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel.Companion.randomEdgeId
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel.Companion.randomEdgeId
 
 
 data class Edge(

@@ -6,7 +6,7 @@ import com.example.graphalgorithms.feature_node.presentation.screen_run_algorith
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.util.BfsUiEvent
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,7 +36,7 @@ class BFSTraversalViewModel(hiltViewModel: UndirectedGraphProvider) :ViewModel()
         bfsRunJob = viewModelScope.launch {
             setAllNodeUnSelected()
             delay(1000)
-            val starterNode = ScreenGraphViewModel.findNodeByLabel(startLabel, nodeList)
+            val starterNode = GraphScreenViewModel.findNodeByLabel(startLabel, nodeList)
             val queue: Queue<Node> = ArrayDeque()
             val edgeQueue:Queue<Edge> = ArrayDeque()
 

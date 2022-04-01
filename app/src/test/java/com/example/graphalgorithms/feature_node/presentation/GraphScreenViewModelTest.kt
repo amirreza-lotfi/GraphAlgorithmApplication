@@ -16,8 +16,8 @@ import org.junit.Rule
 
 import org.junit.Test
 
-class ScreenGraphViewModelTest{
-    private lateinit var viewModel: ScreenGraphViewModel
+class GraphScreenViewModelTest{
+    private lateinit var screenViewModel: GraphScreenViewModel
     private lateinit var useCases: UseCases
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,7 +37,7 @@ class ScreenGraphViewModelTest{
             UndirectedGraph(FakeRepositoryForTesting(),FakeRepositoryForTesting()),
 
         )
-        viewModel = ScreenGraphViewModel(useCases)
+        screenViewModel = GraphScreenViewModel(useCases)
     }
 
     @Test
@@ -46,16 +46,16 @@ class ScreenGraphViewModelTest{
         useCases.addNodeUseCase(Node("b"))
         useCases.addNodeUseCase(Node("c"))
 
-        viewModel = ScreenGraphViewModel(useCases)
+        screenViewModel = GraphScreenViewModel(useCases)
 
-        val first = viewModel.nodeList[0]
-        val second = viewModel.nodeList[1]
+        val first = screenViewModel.nodeList[0]
+        val second = screenViewModel.nodeList[1]
 
-        viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(first))
-        viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(second))
+        screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(first))
+        screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(second))
 
         var isOtherNodeExceptSecondNodeUnSelected = true
-        for(node:Node in viewModel.nodeList){
+        for(node:Node in screenViewModel.nodeList){
             if(node.label!= second.label && node.isNodeSelected){
                 isOtherNodeExceptSecondNodeUnSelected = false
                 break
@@ -70,15 +70,15 @@ class ScreenGraphViewModelTest{
         useCases.addNodeUseCase(Node("b"))
         useCases.addNodeUseCase(Node("c"))
 
-        viewModel = ScreenGraphViewModel(useCases)
+        screenViewModel = GraphScreenViewModel(useCases)
 
-        val first = viewModel.nodeList[0]
+        val first = screenViewModel.nodeList[0]
 
-        viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(first))
-        viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(first))
+        screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(first))
+        screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(first))
 
         var isAllNodesUnSelected = true
-        for(node:Node in viewModel.nodeList){
+        for(node:Node in screenViewModel.nodeList){
             if(node.isNodeSelected){
                 isAllNodesUnSelected = false
                 break

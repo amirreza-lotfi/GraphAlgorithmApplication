@@ -20,14 +20,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 
 @ExperimentalComposeUiApi
 @Composable
-fun WeightTextFiled(viewModel:ScreenGraphViewModel) {
-    var valueWeight = viewModel.entitiesOfAddEditScreen.value.weightOfEdge
+fun WeightTextFiled(screenViewModel:GraphScreenViewModel) {
+    var valueWeight = screenViewModel.entitiesOfAddEditScreen.value.weightOfEdge
     val keyboardController = LocalSoftwareKeyboardController.current
     val placeHolderOfEdge = "Weight"
     Box{
@@ -41,7 +41,7 @@ fun WeightTextFiled(viewModel:ScreenGraphViewModel) {
             keyboardActions = KeyboardActions(onDone = {keyboardController?.hide()}),
             value = valueWeight,
             onValueChange = {
-                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnWeightChanged(it))
+                screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnWeightChanged(it))
                 valueWeight = it
             },
             singleLine = true,

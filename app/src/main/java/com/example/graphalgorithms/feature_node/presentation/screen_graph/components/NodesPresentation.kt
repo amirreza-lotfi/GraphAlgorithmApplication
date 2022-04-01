@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.teal
 import kotlin.math.roundToInt
@@ -28,12 +28,12 @@ import kotlin.math.roundToInt
 
 @Composable
 fun NodesPresentation(
-    viewModel: ScreenGraphViewModel
+    screenViewModel: GraphScreenViewModel
 ) {
-    key(viewModel.nodeList.size) {
-        val nodeList = viewModel.nodeList
+    key(screenViewModel.nodeList.size) {
+        val nodeList = screenViewModel.nodeList
         for (node: Node in nodeList) {
-            DrawNode(node, viewModel)
+            DrawNode(node, screenViewModel)
         }
     }
 }
@@ -41,7 +41,7 @@ fun NodesPresentation(
 @Composable
 fun DrawNode(
     node: Node,
-    viewModel: ScreenGraphViewModel
+    screenViewModel: GraphScreenViewModel
 ){
     var offsetXNode by remember { mutableStateOf(node.xNodePosition) }
     var offsetYNode by remember { mutableStateOf(node.yNodePosition) }
@@ -69,14 +69,14 @@ fun DrawNode(
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDragStart = {
-                            viewModel.onScreenGraphEvent(
+                            screenViewModel.onScreenGraphEvent(
                                 ScreenGraphEvent.SetRunAlgorithmButtonVisibility(
                                     false
                                 )
                             )
                         },
                         onDragEnd = {
-                            viewModel.onScreenGraphEvent(
+                            screenViewModel.onScreenGraphEvent(
                                 ScreenGraphEvent.SetRunAlgorithmButtonVisibility(
                                     true
                                 )
@@ -97,7 +97,7 @@ fun DrawNode(
                             offsetYNode = (screenHeight - 235.dp).toPx()
 
 
-                        viewModel.onScreenGraphEvent(
+                        screenViewModel.onScreenGraphEvent(
                             ScreenGraphEvent.NodePositionChanged(
                                 node,
                                 offsetXNode,
@@ -127,7 +127,7 @@ fun DrawNode(
                     indication = null,
                     interactionSource = MutableInteractionSource()
                 ) {
-                    viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(node))
+                    screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNodeClicked(node))
                 }
         ) {
             Text(

@@ -28,11 +28,13 @@ import com.example.graphalgorithms.feature_node.presentation.screen_run_algorith
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.ShortPathViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_choose_starting_node.ChooseStartingNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.DijkstraAlgorithmScreen
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.AddEditNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.GraphScreen
 
 import com.example.graphalgorithms.feature_node.presentation.screen_landing.LandingScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.MinimumSpanningTreeScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_kruskal.KruskalScreen
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.GraphAlgorithmsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,7 +57,7 @@ class MainActivity : ComponentActivity() {
             else {
                 GraphAlgorithmsTheme {
                     val navController = rememberNavController()
-                    val screenGraphViewModel: ScreenGraphViewModel = hiltViewModel()
+                    val graphScreenViewModel: GraphScreenViewModel = hiltViewModel()
 
                     NavHost(
                         navController = navController,
@@ -63,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         composable(route = GRAPH_SCREEN_ROUT) {
-                            GraphScreen(screenGraphViewModel,
+                            GraphScreen(graphScreenViewModel,
                                 onNavigateToAddEditScreen = {
                                     navController.navigate(ADD_NODE_SCREEN_ROUT)
                                 },
@@ -74,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(route = ADD_NODE_SCREEN_ROUT) {
-                            AddEditNodeScreen(navController = navController, screenGraphViewModel)
+                            AddEditNodeScreen(navController = navController, graphScreenViewModel)
                         }
 
                         composable(route = CHOOSE_ALGORITHMS_SCREEN_ROUT) {
@@ -152,6 +154,18 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        composable(route = MST_ALGORITHM_SCREEN_ROUT){
+                            MinimumSpanningTreeScreen(
+                                viewModel = viewModel(),
+                                onNavigateToScreen ={ rout->
+                                    navController.navigate(rout)
+                                },
+                                onBackArrowClicked = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+
                         composable(
                             route = "$CHOOSE_STARTING_NODE_SCREEN_ROUT/{destinationRout}",
                             arguments = listOf(
@@ -182,6 +196,10 @@ class MainActivity : ComponentActivity() {
                             DijkstraAlgorithmScreen(navController = navController, startingNode = startNode)
                         }
 
+                        composable(route = KRUSKAL_ALGORITHM_SCREEN_ROUT){
+                            KruskalScreen(navController)
+                        }
+
                     }
                 }
             }
@@ -202,5 +220,9 @@ class MainActivity : ComponentActivity() {
         const val JOHNSON_ALGORITHM_SCREEN_ROUT = "JohnsonAlgorithm"
         const val DIAL_ALGORITHM_SCREEN_ROUT = "DialAlgorithm"
         const val CHOOSE_STARTING_NODE_SCREEN_ROUT = "ChooseStartingNodeScreen"
+        const val PRIM_ALGORITHM_SCREEN_ROUT = "PrimAlgorithmScreen"
+        const val KRUSKAL_ALGORITHM_SCREEN_ROUT = "KruskalAlgorithmScreen"
+        const val BORUVKA_ALGORITHM_SCREEN_ROUT = "BoruvkaAlgorithmScreen"
+        const val MST_ALGORITHM_SCREEN_ROUT = "MstAlgorithmScreen"
     }
 }

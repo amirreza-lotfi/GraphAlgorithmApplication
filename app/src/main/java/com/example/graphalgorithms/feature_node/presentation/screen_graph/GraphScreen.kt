@@ -1,6 +1,5 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_graph
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,20 +7,16 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.R
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.AddEditScreenNavigationButtons
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.ActionButtonOfGraph
+import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.EmptyGraphAnimation
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.GraphPresentation
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.GraphScreenUiEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
-import com.example.graphalgorithms.feature_node.presentation.ui.theme.darkGray
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.red
 import kotlinx.coroutines.flow.collectLatest
@@ -29,13 +24,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GraphScreen(
-    viewModel: ScreenGraphViewModel,
+    screenViewModel: GraphScreenViewModel,
     onNavigateToAddEditScreen:()->Unit,
     onNavigateToChooseAlgorithmScreen:()->Unit,
 ){
-    val isNodeSelected = viewModel.isAnyNodeSelected
+    val isNodeSelected = screenViewModel.isAnyNodeSelected
     val actionButtonVisibility by rememberSaveable{
-        mutableStateOf(viewModel.runAlgorithmButtonVisibility)
+        mutableStateOf(screenViewModel.runAlgorithmButtonVisibility)
     }
 
     val modifierOfActionButton = Modifier
@@ -56,28 +51,18 @@ fun GraphScreen(
             modifier = Modifier.align(Alignment.BottomEnd),
             isNodeSelected = isNodeSelected.value,
             onAddNodeClicked = {
-                viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToAddScreen)
+                screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToAddScreen)
                 onNavigateToAddEditScreen()
             },
             onEditNodeClicked = {
-                viewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToEditScreen)
+                screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnNavigateToEditScreen)
                 onNavigateToAddEditScreen()
             })
 
 
-        GraphPresentation(viewModel = viewModel)
-        if(viewModel.graphEmptyImageVisibility.value){
-            Column(
-                Modifier.align(Alignment.Center)
-            ) {
-                Image(
-                    painterResource(R.drawable.empty),
-                    contentDescription = "The graph is empty",
-                    contentScale = ContentScale.Fit
-                )
-                Text(text = "The graph is empty!!", color = darkGray, modifier = Modifier.align(CenterHorizontally))
-            }
-        }
+        GraphPresentation(screenViewModel = screenViewModel)
+
+        EmptyGraphAnimation(modifier = Modifier.align(Alignment.Center), screenViewModel = screenViewModel)
 
         if(isNodeSelected.value){
             ActionButtonOfGraph(
@@ -87,8 +72,8 @@ fun GraphScreen(
                 buttonColor = red,
                 isButtonVisible = actionButtonVisibility.value,
                 onClick = {
-                    viewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)
-                    viewModel.reDrawNodes.value+=1
+                    screenViewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)
+                    screenViewModel.reDrawNodes.value+=1
                 }
             )
         }else{
@@ -100,7 +85,7 @@ fun GraphScreen(
                 isButtonVisible = actionButtonVisibility.value,
                 onClick = {
                     coroutineScope.launch {
-                        viewModel.saveGraphInDatabase()
+                        screenViewModel.saveGraphInDatabase()
                         onNavigateToChooseAlgorithmScreen()
                     }
                 }
@@ -108,10 +93,10 @@ fun GraphScreen(
         }
 
         LaunchedEffect(key1 = 1){
-            viewModel.graphScreenUiEvent.collectLatest {
+            screenViewModel.graphScreenUiEvent.collectLatest {
                 when(it){
                     is GraphScreenUiEvent.OnDataFetched -> {
-                        viewModel.onScreenGraphEvent(ScreenGraphEvent.OnSetGraphPictureVisibility)
+                        screenViewModel.onScreenGraphEvent(ScreenGraphEvent.OnSetGraphPictureVisibility)
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -15,6 +16,7 @@ import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Node
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.*
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.util.AdjacencyTable
+import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -49,6 +51,7 @@ fun DijkstraAlgorithmScreen (
     Box(
         Modifier
             .fillMaxSize()
+            .background(lightGray)
             .padding(16.dp)
     ){
         DrawGraphEdges(viewModel.edgeList)

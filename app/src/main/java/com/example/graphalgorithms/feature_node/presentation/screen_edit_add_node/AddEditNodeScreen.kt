@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.AddEditNodeScreenEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.util.UiEvent
-import com.example.graphalgorithms.feature_node.presentation.ScreenGraphViewModel
+import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.components.*
 import kotlinx.coroutines.flow.collectLatest
 
@@ -21,11 +21,11 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddEditNodeScreen(
     navController: NavController,
-    viewModel: ScreenGraphViewModel
+    screenViewModel: GraphScreenViewModel
 ){
     val context = LocalContext.current
 
-    var nodeLabel = viewModel.entitiesOfAddEditScreen.value.nodeLabel
+    var nodeLabel = screenViewModel.entitiesOfAddEditScreen.value.nodeLabel
 
 
     Box(
@@ -34,21 +34,21 @@ fun AddEditNodeScreen(
             .fillMaxSize()
     ) {
         NodeAndEdgesComponents(
-            viewModel = viewModel,
+            screenViewModel = screenViewModel,
             nodeLabel = nodeLabel,
             onValueOfNodeLabelChanged = {
-                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnNodeLabelChanged(it))
+                screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnNodeLabelChanged(it))
             }
         )
         AddEditScreenFloatingActionButton(
             modifier = Modifier.align(Alignment.BottomEnd),
             onClick = {
-                viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnSaveNodeButtonClicked)
+                screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnSaveNodeButtonClicked)
             }
         )
 
         LaunchedEffect(key1 = true){
-            viewModel.uiEventFlow.collectLatest{ event->
+            screenViewModel.uiEventFlow.collectLatest{ event->
                 when(event){
                     is UiEvent.ShowErrorSnackbar->{
                         Toast.makeText(context,event.str,Toast.LENGTH_LONG).show()
@@ -62,7 +62,7 @@ fun AddEditNodeScreen(
     }
 
     BackHandler {
-        viewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnCancelEditNodeButtonClicked)
+        screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnCancelEditNodeButtonClicked)
         navController.popBackStack()
     }
 }
