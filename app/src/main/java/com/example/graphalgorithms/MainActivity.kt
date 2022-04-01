@@ -35,6 +35,7 @@ import com.example.graphalgorithms.feature_node.presentation.screen_graph.GraphS
 import com.example.graphalgorithms.feature_node.presentation.screen_landing.LandingScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.MinimumSpanningTreeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_kruskal.KruskalScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_prim.PrimScreen
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.GraphAlgorithmsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -198,6 +199,10 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = KRUSKAL_ALGORITHM_SCREEN_ROUT){
                             KruskalScreen(navController)
+                        }
+
+                        composable(route = PRIM_ALGORITHM_SCREEN_ROUT){
+                            PrimScreen(navController)
                         }
 
                     }

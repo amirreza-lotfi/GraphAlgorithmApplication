@@ -5,6 +5,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
+import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.WeightPresentation
 
 
 @Composable
@@ -22,6 +23,12 @@ fun DrawVisitedEdgeWithRedColor(visitedEdges:List<Edge>) {
         )
 
         DrawSingleEdge(offsetFromNode, offsetToNode, Color.Red, 10f)
+
+        val xPositionOfEdgeWeight = (edge.nodeFrom.xNodePosition + edge.nodeTo.xNodePosition)/2 + 24
+        val yPositionOfEdgeWeight = (edge.nodeFrom.yNodePosition + edge.nodeTo.yNodePosition)/2 + 24
+
+
+        WeightPresentation(edge,xPositionOfEdgeWeight, yPositionOfEdgeWeight)
     }
 
 }
