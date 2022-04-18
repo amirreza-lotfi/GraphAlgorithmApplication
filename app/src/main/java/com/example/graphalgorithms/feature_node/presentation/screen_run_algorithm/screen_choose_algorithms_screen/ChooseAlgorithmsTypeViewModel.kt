@@ -3,6 +3,7 @@ package com.example.graphalgorithms.feature_node.presentation.screen_run_algorit
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.graphalgorithms.MainActivity
 import com.example.graphalgorithms.MainActivity.Companion.BASIC_ALGORITHMS_SCREEN_ROUT
 import com.example.graphalgorithms.MainActivity.Companion.MST_ALGORITHM_SCREEN_ROUT
 import com.example.graphalgorithms.MainActivity.Companion.SHORT_PATH_SCREEN_ROUT
@@ -15,28 +16,39 @@ class ChooseAlgorithmsTypeViewModel:ViewModel(){
         OptionItem(
             BASIC_ALGORITHMS_SCREEN_ROUT,
             "Basic Algorithms",
-            "24 algorithms",
-            true),
+            true,
+            hasStartingNode = false
+        ),
 
         OptionItem(
-            MST_ALGORITHM_SCREEN_ROUT,
-            "Minimum Spanning Tree",
-            "24 algorithms"),
+            MainActivity.BFS_TRAVERSAL_SCREEN_ROUT,
+            "BFS Algorithm",
+            hasStartingNode = true
+        ),
 
         OptionItem(
-            SHORT_PATH_SCREEN_ROUT,
-            "Short Path Algorithms",
-            "24 algorithms"),
+            MainActivity.DFS_TRAVERSAL_SCREEN_ROUT,
+            "DFS Algorithm",
+            hasStartingNode = true
+        ),
 
         OptionItem(
-            "BackTrackingAlgorithmsScreen",
-            "BackTracking Algorithms",
-            "24 algorithms"),
+            MainActivity.PRIM_ALGORITHM_SCREEN_ROUT,
+            "Prim Algorithm",
+            hasStartingNode = false
+        ),
 
         OptionItem(
-            "TopologicalAlgorithmsScreen",
-            "Topological Algorithms",
-            "24 algorithms"),
+            MainActivity.KRUSKAL_ALGORITHM_SCREEN_ROUT,
+            "Kruskal Algorithm",
+            hasStartingNode = false
+        ),
+
+        OptionItem(
+            MainActivity.DIJKSTRA_ALGORITHM_SCREEN_ROUT,
+            "Dijkstra Algorithm",
+            hasStartingNode = true
+        ),
     )
 
 

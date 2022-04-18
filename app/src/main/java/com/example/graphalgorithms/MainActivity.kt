@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,27 +22,27 @@ import androidx.navigation.navArgument
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.UndirectedGraphProvider
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.BasicAlgorithmsScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.BasicAlgorithmsViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.BFSTraversalScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_bfs_traversal.BFSTraversalScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_algorithms_screen.ChooseAlgorithmTypeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_algorithms_screen.ChooseAlgorithmsTypeViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.ShortPathScreen
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.ShortPathViewModel
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_choose_starting_node.ChooseStartingNodeScreen
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_short_path_algorithms.screen_dijkstra.DijkstraAlgorithmScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_starting_node.ChooseStartingNodeScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_dijkstra.DijkstraAlgorithmScreen
 import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
 import com.example.graphalgorithms.feature_node.presentation.screen_edit_add_node.AddEditNodeScreen
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.GraphScreen
 
 import com.example.graphalgorithms.feature_node.presentation.screen_landing.LandingScreen
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.MinimumSpanningTreeScreen
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_kruskal.KruskalScreen
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_mst_algorithms.screen_prim.PrimScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_kruskal.KruskalScreen
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_prim.PrimScreen
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.GraphAlgorithmsTheme
+import com.example.graphalgorithms.feature_node.presentation.ui.theme.LandingPageTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    lateinit var graphScreenViewModel: GraphScreenViewModel
     @SuppressLint("UnrememberedGetBackStackEntry")
     @ExperimentalComposeUiApi
     @ExperimentalAnimationApi
@@ -49,16 +50,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            var showLandingScreen by rememberSaveable{ mutableStateOf(true)}
-            if(showLandingScreen){
-                LandingScreen {
-                    showLandingScreen = false
+                var showLandingScreen by rememberSaveable{ mutableStateOf(true)}
+
+                graphScreenViewModel = hiltViewModel()
+
+                if(showLandingScreen){
+                    LandingPageTheme {
+                        LandingScreen {
+                            showLandingScreen = false
+                        }
+                    }
                 }
-            }
-            else {
-                GraphAlgorithmsTheme {
+                else {
+                    GraphAlgorithmsTheme {
+
                     val navController = rememberNavController()
-                    val graphScreenViewModel: GraphScreenViewModel = hiltViewModel()
 
                     NavHost(
                         navController = navController,
@@ -86,9 +92,14 @@ class MainActivity : ComponentActivity() {
 
                             ChooseAlgorithmTypeScreen(
                                 viewModel,
-                                onNavigateToAlgorithmsScreen = { route->
-                                    navController.navigate(route)
+                                onNavigateToAlgorithmsScreen = { option->
+                                    if(option.hasStartingNode){
+                                        navController.navigate("$CHOOSE_STARTING_NODE_SCREEN_ROUT/${option.route}")
+                                    }else{
+                                        navController.navigate(option.route)
+                                    }
                                 },
+
                                 onBackArrowClicked = {
                                     navController.popBackStack()
                                 }
@@ -106,12 +117,6 @@ class MainActivity : ComponentActivity() {
 
                             BasicAlgorithmsScreen(
                                 viewModel,
-                                onNavigateToBFSScreen = { startingNode ->
-                                    navController.navigate("$BFS_TRAVERSAL_SCREEN_ROUT/$startingNode")
-                                },
-                                onNavigateToDFSScreen = { startingNode ->
-                                    navController.navigate("$DFS_TRAVERSAL_SCREEN_ROUT/$startingNode")
-                                },
                                 onBackArrowClicked = {
                                     navController.popBackStack()
                                 }
@@ -142,30 +147,6 @@ class MainActivity : ComponentActivity() {
                             BFSTraversalScreen(navController,startingNode)
                         }
 
-                        composable(route = SHORT_PATH_SCREEN_ROUT){
-                            val viewModel = ShortPathViewModel()
-                            ShortPathScreen(
-                                viewModel = viewModel,
-                                onNavigateToScreen = { route ->
-                                    navController.navigate(route)
-                                },
-                                onBackArrowClicked = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
-
-                        composable(route = MST_ALGORITHM_SCREEN_ROUT){
-                            MinimumSpanningTreeScreen(
-                                viewModel = viewModel(),
-                                onNavigateToScreen ={ rout->
-                                    navController.navigate(rout)
-                                },
-                                onBackArrowClicked = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
 
                         composable(
                             route = "$CHOOSE_STARTING_NODE_SCREEN_ROUT/{destinationRout}",
@@ -208,6 +189,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+
         }
     }
 
@@ -230,4 +212,5 @@ class MainActivity : ComponentActivity() {
         const val BORUVKA_ALGORITHM_SCREEN_ROUT = "BoruvkaAlgorithmScreen"
         const val MST_ALGORITHM_SCREEN_ROUT = "MstAlgorithmScreen"
     }
+
 }

@@ -50,7 +50,6 @@ fun AddEdgeRow(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 if (isAddButtonSelected && nodesLabels.size>0) {
                     LabelAndAddEdgeComponents(
                         screenViewModel,

@@ -105,9 +105,6 @@ class BasicAlgorithmsViewModel(val hiltViewModel: UndirectedGraphProvider) :View
         }
     }
 
-    private fun isGraphTree(){
-
-    }
     private fun setAllNodesUnselected(){
         for(node:Node in nodeList) {
             node.isNodeSelected = false

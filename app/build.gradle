@@ -113,4 +113,8 @@ dependencies {
     testImplementation "org.mockito:mockito-core:2.21.0"
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
 
+    implementation "com.airbnb.android:lottie-compose:4.0.0"
+
+
+
 }

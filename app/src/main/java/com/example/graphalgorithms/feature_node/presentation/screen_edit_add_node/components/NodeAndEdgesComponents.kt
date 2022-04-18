@@ -17,11 +17,10 @@ fun NodeAndEdgesComponents(
     nodeLabel:String,
     onValueOfNodeLabelChanged:(it:String)->Unit
 ) {
-    Column {
-        TitleOfScreenXXX(screenViewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen)
-        Column(
-            Modifier.padding(8.dp)
-        ){
+    Column(
+        Modifier.padding(8.dp)
+    ) {
+        Column{
             LabelTextField(
                 value = nodeLabel,
                 onValueChange = {
@@ -32,6 +31,7 @@ fun NodeAndEdgesComponents(
             AddEdgeRow(screenViewModel)
         }
         Spacer(Modifier.height(32.dp))
+
         EdgesOfNodeComposable(screenViewModel)
     }
 }

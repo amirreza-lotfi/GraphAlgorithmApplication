@@ -17,14 +17,9 @@ fun TitleOfScreen(
     onBackArrowClicked:()->Unit
 ) {
     Column{
-        Icon(
-            Icons.Filled.ArrowBack,
-            contentDescription = "back to Graph screen",
-            Modifier.size(24.dp)
-                .clickable {
-                    onBackArrowClicked()
-                }
-        )
+        CustomBackButton {
+            onBackArrowClicked()
+        }
         Column(
             Modifier
                 .fillMaxWidth()

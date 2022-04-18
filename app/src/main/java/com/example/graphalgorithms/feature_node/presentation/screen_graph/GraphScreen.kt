@@ -17,8 +17,8 @@ import com.example.graphalgorithms.feature_node.presentation.screen_graph.compon
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.components.GraphPresentation
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.GraphScreenUiEvent
 import com.example.graphalgorithms.feature_node.presentation.screen_graph.util.ScreenGraphEvent
-import com.example.graphalgorithms.feature_node.presentation.ui.theme.lightGray
-import com.example.graphalgorithms.feature_node.presentation.ui.theme.red
+import com.example.graphalgorithms.feature_node.presentation.ui.theme.white
+
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,6 +29,7 @@ fun GraphScreen(
     onNavigateToChooseAlgorithmScreen:()->Unit,
 ){
     val isNodeSelected = screenViewModel.isAnyNodeSelected
+
     val actionButtonVisibility by rememberSaveable{
         mutableStateOf(screenViewModel.runAlgorithmButtonVisibility)
     }
@@ -43,7 +44,8 @@ fun GraphScreen(
 
     Box(
         modifier = Modifier
-            .background(lightGray)
+            .background(white)
+            .padding(top = 48.dp)
             .fillMaxSize()
             .padding(12.dp)
     ){
@@ -64,32 +66,34 @@ fun GraphScreen(
 
         EmptyGraphAnimation(modifier = Modifier.align(Alignment.Center), screenViewModel = screenViewModel)
 
-        if(isNodeSelected.value){
-            ActionButtonOfGraph(
-                modifier = modifierOfActionButton
-                    .align(Alignment.BottomCenter),
-                text = "Delete Node",
-                buttonColor = red,
-                isButtonVisible = actionButtonVisibility.value,
-                onClick = {
-                    screenViewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)
-                    screenViewModel.reDrawNodes.value+=1
-                }
-            )
-        }else{
-            ActionButtonOfGraph(
-                modifier = modifierOfActionButton
-                    .align(Alignment.BottomCenter),
-                text = "Run Algorithm",
-                buttonColor = MaterialTheme.colors.primary,
-                isButtonVisible = actionButtonVisibility.value,
-                onClick = {
-                    coroutineScope.launch {
-                        screenViewModel.saveGraphInDatabase()
-                        onNavigateToChooseAlgorithmScreen()
+        if(screenViewModel.nodeList.size>0) {
+            if (isNodeSelected.value) {
+                ActionButtonOfGraph(
+                    modifier = modifierOfActionButton
+                        .align(Alignment.BottomCenter),
+                    text = "Delete Node",
+                    buttonColor = MaterialTheme.colors.error,
+                    isButtonVisible = actionButtonVisibility.value,
+                    onClick = {
+                        screenViewModel.onScreenGraphEvent(ScreenGraphEvent.DeleteSelectedNode)
+                        screenViewModel.reDrawNodes.value += 1
                     }
-                }
-            )
+                )
+            } else {
+                ActionButtonOfGraph(
+                    modifier = modifierOfActionButton
+                        .align(Alignment.BottomCenter),
+                    text = "Run And Save",
+                    buttonColor = MaterialTheme.colors.primary,
+                    isButtonVisible = actionButtonVisibility.value,
+                    onClick = {
+                        coroutineScope.launch {
+                            screenViewModel.saveGraphInDatabase()
+                            onNavigateToChooseAlgorithmScreen()
+                        }
+                    }
+                )
+            }
         }
 
         LaunchedEffect(key1 = 1){

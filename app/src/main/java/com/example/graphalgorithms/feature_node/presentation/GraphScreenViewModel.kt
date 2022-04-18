@@ -139,11 +139,14 @@ class GraphScreenViewModel @Inject constructor(
                 }
             }
             is ScreenGraphEvent.OnSetGraphPictureVisibility->{
-                _graphEmptyImageVisibility.value = nodeList.size==0
+                setEmptyGraphPictureVisibility()
             }
         }
     }
 
+    private fun setEmptyGraphPictureVisibility(){
+        _graphEmptyImageVisibility.value = nodeList.size==0
+    }
     fun onAddEditScreenEvent(eventEdit: AddEditNodeScreenEvent){
         when(eventEdit){
             is AddEditNodeScreenEvent.OnSaveNodeButtonClicked-> {
@@ -158,6 +161,8 @@ class GraphScreenViewModel @Inject constructor(
             }
             is AddEditNodeScreenEvent.OnCancelEditNodeButtonClicked->{
                 resetAddEditEntity()
+                setAllNodesUnselected()
+                _isAddButtonSelected.value = false
             }
             is AddEditNodeScreenEvent.SaveEdgeButtonClicked->{
                 recomposeEdgeListPresentation()
@@ -303,13 +308,23 @@ class GraphScreenViewModel @Inject constructor(
 
     private fun isNodeLabelValid():Boolean{
         val label = _addEditScreenEntity.value.nodeLabel
-        return label.isNotEmpty() && label.length == 1 && label.isNotBlank()
+        return label.isNotEmpty() &&
+                label.length == 1 &&
+                label.isNotBlank() &&
+                (isLabelUnique(label) || isAnyNodeSelected.value)
     }
 
+    private fun isLabelUnique(label:String):Boolean{
+        return !nodeLabels.contains(label)
+    }
     private fun problemOfLabel():String{
         val label = _addEditScreenEntity.value.nodeLabel
+
         if(label.isEmpty() || label.isBlank()){
             return "The label is empty. choose label for node"
+        }
+        if (!isLabelUnique(label)){
+            return "The label is available in graph. Choose another name"
         }
         return if(label.length > 1){
             "The label is too long. please type only one letter "
@@ -364,6 +379,7 @@ class GraphScreenViewModel @Inject constructor(
             getNodesFromDataBase()
             getEdgesFromDataBase()
             _graphScreenUiEvent.emit(GraphScreenUiEvent.OnDataFetched)
+            setEmptyGraphPictureVisibility()
         }
 
     }

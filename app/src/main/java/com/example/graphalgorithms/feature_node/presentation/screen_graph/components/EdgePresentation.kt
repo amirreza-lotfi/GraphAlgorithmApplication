@@ -6,9 +6,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_basic_algorithms.screen_bfs_traversal.component.DrawSingleEdge
+import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_bfs_traversal.component.DrawSingleEdge
 import com.example.graphalgorithms.feature_node.domain.entitiy.Edge
 import com.example.graphalgorithms.feature_node.presentation.GraphScreenViewModel
+import com.example.graphalgorithms.feature_node.presentation.ui.theme.black
 
 @Composable
 fun EdgePresentation(
@@ -19,15 +20,15 @@ fun EdgePresentation(
     key(screenViewModel.redrawEdges.value) {
         for (edge: Edge in edgeList) {
             val offsetFromNode = Offset(
-                edge.nodeFrom.xNodePosition + 90.dp.value,
-                edge.nodeFrom.yNodePosition + 90.dp.value
+                edge.nodeFrom.xNodePosition + 60.dp.value,
+                edge.nodeFrom.yNodePosition + 60.dp.value
             )
 
             val offsetToNode = Offset(
-                edge.nodeTo.xNodePosition + 90.dp.value,
-                edge.nodeTo.yNodePosition + 90.dp.value
+                edge.nodeTo.xNodePosition + 60.dp.value,
+                edge.nodeTo.yNodePosition + 60.dp.value
             )
-            DrawSingleEdge(start = offsetFromNode, end = offsetToNode, color = Color.Black)
+            DrawSingleEdge(start = offsetFromNode, end = offsetToNode, color = black)
 
             val xPositionOfEdgeWeight = (edge.nodeFrom.xNodePosition + edge.nodeTo.xNodePosition)/2 + 24
             val yPositionOfEdgeWeight = (edge.nodeFrom.yNodePosition + edge.nodeTo.yNodePosition)/2 + 24

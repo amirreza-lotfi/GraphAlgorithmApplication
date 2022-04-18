@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.graphalgorithms.MainActivity
 import com.example.graphalgorithms.feature_node.presentation.screen_run_algorithm.screen_choose_algorithms_screen.util.OptionItem
 import com.example.graphalgorithms.feature_node.presentation.ui.theme.*
@@ -33,20 +34,20 @@ fun ItemOnScreen(
         .fillMaxWidth()
         .clip(RoundedCornerShape(16.dp))
         .clickable(
-            indication = rememberRipple(color = lightYellow),
+            indication = rememberRipple(color = teal),
             interactionSource =  remember { MutableInteractionSource() }
         ){
             onItemClicked()
         }
 
     val modifierSelectedItem = rowModifier
-        .background(Color.White)
-        .border(1.5.dp, orange, RoundedCornerShape(16.dp))
-        .padding(12.dp)
+        .background(white)
+        .border(1.5.dp, teal, RoundedCornerShape(16.dp))
+        .padding(16.dp)
         .padding(start = 12.dp)
     val modifierUnSelectedItem = rowModifier
         .background(lightGray)
-        .padding(12.dp)
+        .padding(16.dp)
         .padding(start = 12.dp)
 
     Row(
@@ -58,33 +59,12 @@ fun ItemOnScreen(
         ){
             Text(
                 option.title,
-                style = MaterialTheme.typography.h5,
                 color = black,
+                fontSize = 28.sp
             )
             Spacer(Modifier.height(4.dp))
 
-            if(option.content!= "") {
-                Text(
-                    option.content,
-                    style = MaterialTheme.typography.body1,
-                    color = Color.Gray
-                )
-            }
         }
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun test(){
-    ItemOnScreen(
-        OptionItem(
-            MainActivity.BASIC_ALGORITHMS_SCREEN_ROUT,
-            "Basic Algorithms",
-            "24 algorithms",
-            true)
-    ) {
 
     }
 }

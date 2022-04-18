@@ -3,7 +3,9 @@ package com.example.graphalgorithms.feature_node.presentation.screen_edit_add_no
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -30,16 +32,22 @@ fun AddEditNodeScreen(
 
     Box(
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .padding(16.dp)
     ) {
-        NodeAndEdgesComponents(
-            screenViewModel = screenViewModel,
-            nodeLabel = nodeLabel,
-            onValueOfNodeLabelChanged = {
-                screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnNodeLabelChanged(it))
-            }
-        )
+        Column {
+            TitleOfScreenXXX(screenViewModel.entitiesOfAddEditScreen.value.titleOfAddEditScreen)
+
+            NodeAndEdgesComponents(
+                screenViewModel = screenViewModel,
+                nodeLabel = nodeLabel,
+                onValueOfNodeLabelChanged = {
+                    screenViewModel.onAddEditScreenEvent(AddEditNodeScreenEvent.OnNodeLabelChanged(it))
+                }
+            )
+        }
+
         AddEditScreenFloatingActionButton(
             modifier = Modifier.align(Alignment.BottomEnd),
             onClick = {

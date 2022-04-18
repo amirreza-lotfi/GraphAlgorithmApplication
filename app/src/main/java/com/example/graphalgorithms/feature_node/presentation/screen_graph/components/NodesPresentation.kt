@@ -1,12 +1,15 @@
 package com.example.graphalgorithms.feature_node.presentation.screen_graph.components
 
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,8 +50,13 @@ fun DrawNode(
     var offsetYNode by remember { mutableStateOf(node.yNodePosition) }
 
 
-
-    val colorOfNode = if(node.isNodeSelected) Color.Red else teal
+    val animatedColor by animateColorAsState(
+        targetValue = if(node.isNodeSelected) MaterialTheme.colors.error else MaterialTheme.colors.primary,
+        tween(
+           durationMillis = 500,
+           delayMillis = 50
+        )
+    )
 
     val configuration = LocalConfiguration.current
 
@@ -93,8 +101,8 @@ fun DrawNode(
 
                         if (offsetYNode.toDp() < 30f.toDp())
                             offsetYNode = 30f
-                        else if (offsetYNode.toDp() + 235.dp > screenHeight)
-                            offsetYNode = (screenHeight - 235.dp).toPx()
+                        else if (offsetYNode.toDp() + 320.dp > screenHeight)
+                            offsetYNode = (screenHeight - 320.dp).toPx()
 
 
                         screenViewModel.onScreenGraphEvent(
@@ -106,7 +114,7 @@ fun DrawNode(
                         )
                     }
                 }
-                .background(colorOfNode, shape = CircleShape)
+                .background(animatedColor, shape = CircleShape)
                 .layout() { measurable, constraints ->
                     // Measure the composable
                     val placeable = measurable.measure(constraints)
