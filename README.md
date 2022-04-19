@@ -1,6 +1,7 @@
 # GraphAlgorithm
 
-This Application has been developed by Jetpack Compose, LottieAnimations, Clean Architect and Room database.
+This Application was implemented by Jetpack Compose framework. The dagger-hilt library was used for dependency injection and Room library for database and StateFlow and ShareFlow for applying reactive programming.</br>
+With this application, you can create a simple undirected graph and run some famous graph algorithms like Dijkstra, prim, etc.
 
 # Screenshots
 <div>
