@@ -29,17 +29,17 @@ fun AdjacencyTableComposable(
             RowOfAdjacencyTable(
                 array = adjacencyTable.visibilityArray.toList(),
                 scrollState = scrollState,
-                "Visible"
+                " Visible "
             )
             RowOfAdjacencyTable(
                 array = adjacencyTable.distances.toList(),
                 scrollState = scrollState,
-                "Distance"
+                " Distance "
             )
             RowOfAdjacencyTable(
                 array = adjacencyTable.lastNodeArray.toList(),
                 scrollState = scrollState,
-                "LastNode"
+                " LastNode "
             )
         }
     }
@@ -68,14 +68,14 @@ fun RowOfAdjacencyTable(
 
             if(item.javaClass.typeName == "java.lang.Float"){
                 if (item == Float.POSITIVE_INFINITY){
-                    _item = "∞"
+                    _item = " ∞ "
                 }
             }
             Box(modifier = Modifier
                 .width(40.dp)
                 .height(24.dp)
                 .border(1.dp, Color.Black)) {
-                Text(_item.toString(), Modifier.fillMaxSize(),textAlign = TextAlign.Center)
+                Text(" $_item ", Modifier.fillMaxSize(),textAlign = TextAlign.Center)
             }
         }
     }
